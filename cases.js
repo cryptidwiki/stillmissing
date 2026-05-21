@@ -65,4 +65,23 @@ var cases = [
     namus_url: "https://www.namus.gov/MissingPersons/Case#/1318364",
     photo: "images/michaelallendillard.jpg"
   },
+  {
+    id: "sm-003",
+    name: "Charnayjia Peterkin",
+    age_missing: 15,
+    dob: "",
+    date_missing: "2025-12-13",
+    status: "found-safe",
+    city: "Cross Lanes",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "Black",
+    eyes: "Brown",
+    distinguishing: "Last seen wearing a cream-colored top and bottom sweatsuit. May have left in a boxy blue older model sedan.",
+    circumstances: "Charnayjia, 15, went missing on December 13, 2025, from the Cross Lanes area of Kanawha County after leaving WVDHHR custody. She was located by the Kanawha County Sheriff's Office on March 11, 2026.",
+    case_number: "NamUs 2071656",
+    namus_url: "https://www.namus.gov/MissingPersons/Case#/2071656",
+    photo: "images/Charnayija-Peterkin.jpg"
+  },
 ];
