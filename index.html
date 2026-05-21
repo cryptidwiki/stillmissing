@@ -194,6 +194,10 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 .form-success-title { font-family: var(--serif); font-size: 24px; margin-bottom: 0.5rem; }
 .form-success-sub { font-size: 13px; color: var(--text2); line-height: 1.7; }
 
+/* MOBILE CLOSE BAR */
+.mobile-close-bar { display: none; position: sticky; bottom: 0; background: var(--navy2); border-top: 1px solid var(--border2); padding: 0.75rem 1rem; z-index: 20; }
+.mobile-close-btn { width: 100%; padding: 12px; background: var(--navy3); border: 1px solid var(--border2); color: var(--text); font-family: var(--sans); font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 4px; }
+
 /* SHARE TOAST */
 .share-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--navy3); border: 1px solid var(--border2); padding: 10px 20px; font-size: 12px; color: var(--text); border-radius: 4px; display: none; z-index: 2000; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
 .share-toast.show { display: block; animation: toastIn 0.2s ease; }
@@ -219,6 +223,8 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
   .form-row { grid-template-columns: 1fr; }
   .alert-bar { display: none; }
   .sort-wrap { display: none; }
+  .mobile-close-bar { display: flex; }
+  .disclaimer-bar { flex-direction: column; gap: 0.25rem; }
 }
 </style>
 </head>
@@ -752,7 +758,8 @@ function openCase(id) {
     + '<button class="tip-submit" onclick="submitTip(\'' + c.id + '\',\'' + c.name + '\')">Submit Tip Anonymously</button>'
     + '</div>'
     + '<button class="action-btn danger" style="font-size:11px;margin-top:0.5rem;" onclick="requestRemoval(\'' + c.name + '\')">Request Case Removal</button>'
-    + '</div>';
+    + '</div>'
+    + '<div class="mobile-close-bar"><button class="mobile-close-btn" onclick="closeCase()">✕ Close</button></div>';
 
   document.getElementById('case-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
