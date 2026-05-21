@@ -765,26 +765,29 @@ function initMap() {
     .style('width','100%').style('height','100%').style('display','block');
   svg.append('rect').attr('width',w).attr('height',h).attr('fill','#0a0e1a');
 
-  var projection = d3.geoMercator()
-    .center([-80.5, 38.9])
-    .scale(5800)
-    .translate([w/2, h/2]);
+  var projection = d3.geoMercator();
   var path = d3.geoPath().projection(projection);
   var tooltip = document.getElementById('state-tooltip');
 
   fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json')
     .then(function(r){ return r.json(); })
     .then(function(us) {
-      // WV FIPS code is 54 — filter counties starting with 54
       var allCounties = topojson.feature(us, us.objects.counties);
+
+      // Filter WV counties — FIPS 54xxx
       var wvFeatures = allCounties.features.filter(function(d){
-        return String(d.id).startsWith('54');
+        return Math.floor(d.id / 1000) === 54;
       });
 
-      // Draw WV border background
-      var wvStates = topojson.feature(us, us.objects.states);
-      var wvState = wvStates.features.filter(function(d){ return d.id === 54; });
-      svg.selectAll('.wv-bg').data(wvState).enter().append('path')
+      if (!wvFeatures.length) { console.error('No WV counties found'); return; }
+
+      // Auto-fit projection to WV with padding
+      var wvCollection = { type:'FeatureCollection', features: wvFeatures };
+      projection.fitExtent([[40, 40],[w-40, h-40]], wvCollection);
+
+      // Background rect for WV
+      svg.append('path')
+        .datum(wvCollection)
         .attr('d', path)
         .attr('fill', '#0a0f1e')
         .attr('stroke', 'none');
@@ -796,9 +799,8 @@ function initMap() {
         .attr('fill', '#0d1525')
         .attr('stroke', '#1a2540')
         .attr('stroke-width', 0.8)
-        .attr('data-id', function(d){ return d.id; })
         .on('mousemove', function(event, d) {
-          var name = wvCountyNames[d.id] || 'Unknown';
+          var name = wvCountyNames[String(d.id)] || 'Unknown';
           var counts = getCaseCounts();
           var count = counts[name] || 0;
           var mapSection = document.querySelector('.map-section');
@@ -811,7 +813,7 @@ function initMap() {
         })
         .on('mouseleave', function(){ tooltip.style.display = 'none'; })
         .on('click', function(event, d) {
-          var name = wvCountyNames[d.id] || null;
+          var name = wvCountyNames[String(d.id)] || null;
           if (!name) return;
           if (activeCounty === name) { clearCountyFilter(); return; }
           activeCounty = name;
@@ -828,23 +830,20 @@ function initMap() {
       // County borders
       svg.append('path')
         .datum(topojson.mesh(us, us.objects.counties, function(a,b){
-          return a !== b && String(a.id).startsWith('54') && String(b.id).startsWith('54');
+          return a !== b && Math.floor(a.id/1000) === 54 && Math.floor(b.id/1000) === 54;
         }))
-        .attr('fill','none')
-        .attr('stroke','#1e2d4a')
-        .attr('stroke-width', 0.5)
-        .attr('d', path);
+        .attr('fill','none').attr('stroke','#1e2d4a').attr('stroke-width', 0.6).attr('d', path);
 
       // WV outer border
       svg.append('path')
-        .datum(topojson.mesh(us, us.objects.states, function(a,b){ return a.id === 54 || b.id === 54; }))
-        .attr('fill','none')
-        .attr('stroke','#2a3f6a')
-        .attr('stroke-width', 1.5)
-        .attr('d', path);
+        .datum(topojson.merge(us, us.objects.counties.geometries.filter(function(d){
+          return Math.floor(d.id/1000) === 54;
+        })))
+        .attr('fill','none').attr('stroke','#3a5a9a').attr('stroke-width', 2).attr('d', path);
 
       updateHeatmap();
-    });
+    })
+    .catch(function(err){ console.error('Map load error:', err); });
 }
 
 // WV county FIPS to name mapping
@@ -907,7 +906,7 @@ function updateHeatmap() {
   var counts = getCaseCounts();
   var max = Math.max(1, d3.max(Object.values(counts)) || 1);
   d3.selectAll('.county').attr('fill', function(d) {
-    var name = wvCountyNames[d.id] || wvCountyNames[String(d.id)];
+    var name = wvCountyNames[String(d.id)];
     var count = counts[name] || 0;
     var isSelected = activeCounty && activeCounty === name;
     if (isSelected) return 'rgba(245,158,11,0.3)';
@@ -917,10 +916,10 @@ function updateHeatmap() {
     if (intensity < 0.66) return 'rgba(239,68,68,0.60)';
     return 'rgba(239,68,68,0.88)';
   }).attr('stroke', function(d) {
-    var name = wvCountyNames[d.id] || wvCountyNames[String(d.id)];
+    var name = wvCountyNames[String(d.id)];
     return (activeCounty && activeCounty === name) ? 'rgba(245,158,11,0.9)' : '#1a2540';
   }).attr('stroke-width', function(d) {
-    var name = wvCountyNames[d.id] || wvCountyNames[String(d.id)];
+    var name = wvCountyNames[String(d.id)];
     return (activeCounty && activeCounty === name) ? 2 : 0.8;
   });
 }
@@ -1266,15 +1265,18 @@ function checkHash() {
 document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeCase(); closeForm(); } });
 
 // Init
+// Render feed immediately — don't wait for map
+updateStats();
+updateBottomStats();
+renderFeed();
+buildTicker();
+checkHash();
+
+// Then load map
 var topoScript = document.createElement('script');
 topoScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js';
 topoScript.onload = function() {
   initMap();
-  updateStats();
-  updateBottomStats();
-  renderFeed();
-  buildTicker();
-  checkHash();
 };
 document.head.appendChild(topoScript);
 </script>
