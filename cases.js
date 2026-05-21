@@ -46,4 +46,23 @@ var cases = [
     namus_url: "",
     photo: "images/shalyn-harvey.png"
   },
+{
+    id: "sm-002",
+    name: "Michael Allen Dillard",
+    age_missing: 15,
+    dob: "2002-12-13",
+    date_missing: "2018-01-11",
+    status: "active",
+    city: "Calvin",
+    state: "WV",
+    height: "5'5\"",
+    weight: "133 lbs",
+    hair: "Brown",
+    eyes: "Hazel",
+    distinguishing: "Scars on arms. Was not wearing warm clothing at time of disappearance. Did not have his phone or glasses with him.",
+    circumstances: "On January 11, 2018, 15-year-old Michael disappeared from his family home in Calvin, WV at approximately 4:30pm while helping his mother carry wood pellets from the car. Without a word, he ran into the woods behind the house and never returned. Temperatures that night dropped to around 20 degrees with rain and fog. Michael had no phone, no glasses, and no warm clothing — only two dollars in his pocket. A large search involving a helicopter, bloodhounds, and dive teams found only his jacket approximately 300 yards from his home, discovered about a week and a half later. Michael had been released from a mental health treatment center just three weeks prior. In October 2024, state police investigated a tip regarding possible remains but the lead was ruled not credible. The case remains active.",
+    case_number: "NamUs 1318364",
+    namus_url: "https://www.namus.gov/MissingPersons/Case#/1318364",
+    photo: "images/michaelallendillard.jpg"
+  },
 ];
