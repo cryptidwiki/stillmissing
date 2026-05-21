@@ -84,4 +84,23 @@ var cases = [
     namus_url: "https://www.namus.gov/MissingPersons/Case#/2071656",
     photo: "images/Charnayija-Peterkin.jpg"
   },
+  {
+    id: "sm-004",
+    name: "Ataysheon Smith",
+    age_missing: 17,
+    dob: "",
+    date_missing: "2026-04-20",
+    status: "active",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "Brown",
+    eyes: "Brown",
+    distinguishing: "",
+    circumstances: "Ataysheon, 17, was reported missing from Charleston, WV on April 20, 2026. The case is being investigated by the Charleston Police Department. He is also listed with the National Center for Missing & Exploited Children.",
+    case_number: "NamUs 2085148",
+    namus_url: "https://www.namus.gov/MissingPersons/Case#/2085148",
+    photo: "images/AtaysheonSmith.jpg"
+  },
 ];
