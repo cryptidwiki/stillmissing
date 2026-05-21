@@ -1041,11 +1041,13 @@ function nativeShare(id, name, city, state, date_missing) {
 
 function shareFacebook(id, name, city, state, date_missing) {
   var url = getCaseUrl(id);
-  var caption = getCaption(name, city, state, date_missing);
-  copyToClipboard(caption, '📋 Caption copied — paste into your Facebook post!');
+  var caption = getCaption(name, city, state, date_missing) + '\n\n' + url;
+  copyToClipboard(caption, '📋 Caption copied! Paste it into your Facebook post.');
   setTimeout(function(){
-    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
-  }, 800);
+    if (confirm('Caption copied to clipboard!\n\nClick OK to open Facebook — then paste the caption into your post with Ctrl+V or long-press → Paste.')) {
+      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
+    }
+  }, 300);
 }
 
 function shareTwitter(id, name, city, state, date_missing) {
