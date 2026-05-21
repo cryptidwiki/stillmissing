@@ -387,14 +387,14 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 <div class="main-layout">
   <div class="map-section">
     <div class="map-header">
-      <span class="map-title">// Live Case Map — West Virginia //</span>
-      <span class="map-hint">Click a state to filter cases</span>
+      <span class="map-title">// Live Case Map — WV Counties //</span>
+      <span class="map-hint">Click a county to filter cases</span>
     </div>
     <div id="map-container"></div>
     <div class="state-tooltip" id="state-tooltip"></div>
-    <div class="state-banner" id="state-banner" onclick="clearStateFilter()"></div>
+    <div class="state-banner" id="state-banner" onclick="clearCountyFilter()"></div>
     <div class="map-legend">
-      <div class="legend-title">Case Density</div>
+      <div class="legend-title">Cases per County</div>
       <div class="legend-items">
         <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.25)"></div>Low</div>
         <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.55)"></div>Med</div>
@@ -660,35 +660,20 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 <script>
 var activeFilter = 'all';
 var activeAgeFilter = 'all';
-var activeState = null;
+var activeCounty = null;
 var searchQuery = '';
 var sortMode = 'newest';
-var projection;
 
-var fipsToState = {
-  '01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT',
-  '10':'DE','11':'DC','12':'FL','13':'GA','15':'HI','16':'ID','17':'IL',
-  '18':'IN','19':'IA','20':'KS','21':'KY','22':'LA','23':'ME','24':'MD',
-  '25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE',
-  '32':'NV','33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND',
-  '39':'OH','40':'OK','41':'OR','42':'PA','44':'RI','45':'SC','46':'SD',
-  '47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV',
-  '55':'WI','56':'WY'
-};
-
-var stateNames = {
-  'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
-  'CO':'Colorado','CT':'Connecticut','DE':'Delaware','FL':'Florida','GA':'Georgia',
-  'HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa',
-  'KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MD':'Maryland',
-  'MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi',
-  'MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire',
-  'NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina',
-  'ND':'North Dakota','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PA':'Pennsylvania',
-  'RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee',
-  'TX':'Texas','UT':'Utah','VT':'Vermont','VA':'Virginia','WA':'Washington',
-  'WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'
-};
+// WV Counties
+var wvCounties = [
+  'Barbour','Berkeley','Boone','Braxton','Brooke','Cabell','Calhoun','Clay',
+  'Doddridge','Fayette','Gilmer','Grant','Greenbrier','Hampshire','Hancock',
+  'Hardy','Harrison','Jackson','Jefferson','Kanawha','Lewis','Lincoln','Logan',
+  'Marion','Marshall','Mason','McDowell','Mercer','Mineral','Mingo','Monongalia',
+  'Monroe','Morgan','Nicholas','Ohio','Pendleton','Pleasants','Pocahontas',
+  'Preston','Putnam','Raleigh','Randolph','Ritchie','Roane','Summers','Taylor',
+  'Tucker','Tyler','Upshur','Wayne','Webster','Wetzel','Wirt','Wood','Wyoming'
+];
 
 // Clock
 function updateClock() {
@@ -729,7 +714,7 @@ function getFiltered() {
   else if (activeFilter === 'found-deceased') list = list.filter(function(c){ return c.status === 'found-deceased'; });
   if (activeAgeFilter === 'child') list = list.filter(function(c){ return c.age_missing <= 17; });
   else if (activeAgeFilter === 'adult') list = list.filter(function(c){ return c.age_missing >= 18; });
-  if (activeState) list = list.filter(function(c){ return c.state === activeState; });
+  if (activeCounty) list = list.filter(function(c){ return (cityToCounty[c.city]||c.city) === activeCounty; });
   if (searchQuery) {
     var q = searchQuery.toLowerCase();
     list = list.filter(function(c){
@@ -773,104 +758,192 @@ document.getElementById('feed-search').addEventListener('input', function(){ sea
 
 // Map
 function initMap() {
-  var container = document.getElementById('map-container');
-  var w = 960, h = 600;
+  var w = 960, h = 660;
   var svg = d3.select('#map-container').append('svg')
     .attr('viewBox','0 0 ' + w + ' ' + h)
     .attr('preserveAspectRatio','xMidYMid meet')
     .style('width','100%').style('height','100%').style('display','block');
   svg.append('rect').attr('width',w).attr('height',h).attr('fill','#0a0e1a');
-  svg.append('line').attr('x1',0).attr('y1',h/2).attr('x2',w).attr('y2',h/2).attr('stroke','#0d1525').attr('stroke-width',0.5).attr('stroke-dasharray','4,8');
-  svg.append('line').attr('x1',w/2).attr('y1',0).attr('x2',w/2).attr('y2',h).attr('stroke','#0d1525').attr('stroke-width',0.5).attr('stroke-dasharray','4,8');
-  projection = d3.geoAlbersUsa().scale(1280).translate([w/2, h/2]);
+
+  var projection = d3.geoMercator()
+    .center([-80.5, 38.9])
+    .scale(5800)
+    .translate([w/2, h/2]);
   var path = d3.geoPath().projection(projection);
   var tooltip = document.getElementById('state-tooltip');
-  fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
+
+  fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json')
     .then(function(r){ return r.json(); })
     .then(function(us) {
-      var statesGeo = topojson.feature(us, us.objects.states);
-      svg.selectAll('.state').data(statesGeo.features).enter().append('path')
-        .attr('class','state').attr('d',path).attr('fill','#0d1525').attr('stroke','#1a2540').attr('stroke-width',0.5)
+      // WV FIPS code is 54 — filter counties starting with 54
+      var allCounties = topojson.feature(us, us.objects.counties);
+      var wvFeatures = allCounties.features.filter(function(d){
+        return String(d.id).startsWith('54');
+      });
+
+      // Draw WV border background
+      var wvStates = topojson.feature(us, us.objects.states);
+      var wvState = wvStates.features.filter(function(d){ return d.id === 54; });
+      svg.selectAll('.wv-bg').data(wvState).enter().append('path')
+        .attr('d', path)
+        .attr('fill', '#0a0f1e')
+        .attr('stroke', 'none');
+
+      // Draw counties
+      svg.selectAll('.county').data(wvFeatures).enter().append('path')
+        .attr('class','county')
+        .attr('d', path)
+        .attr('fill', '#0d1525')
+        .attr('stroke', '#1a2540')
+        .attr('stroke-width', 0.8)
+        .attr('data-id', function(d){ return d.id; })
         .on('mousemove', function(event, d) {
-          var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
-          var count = getCaseCounts()[abbr] || 0;
+          var name = wvCountyNames[d.id] || 'Unknown';
+          var counts = getCaseCounts();
+          var count = counts[name] || 0;
           var mapSection = document.querySelector('.map-section');
           var rect = mapSection.getBoundingClientRect();
           tooltip.style.display = 'block';
           tooltip.style.left = (event.clientX - rect.left + 14) + 'px';
           tooltip.style.top = (event.clientY - rect.top - 10) + 'px';
-          tooltip.innerHTML = '<strong>' + (stateNames[abbr]||abbr) + '</strong> &nbsp;—&nbsp; '
-            + (count > 0 ? '<span style="color:var(--blue)">' + count + ' case' + (count!==1?'s':'') + '</span>' : '<span style="color:var(--text3)">No cases</span>');
+          tooltip.innerHTML = '<strong>' + name + ' County</strong> &nbsp;—&nbsp; '
+            + (count > 0 ? '<span style="color:var(--red)">' + count + ' case' + (count!==1?'s':'') + '</span>' : '<span style="color:var(--text3)">No cases</span>');
         })
         .on('mouseleave', function(){ tooltip.style.display = 'none'; })
         .on('click', function(event, d) {
-          var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
-          if (!abbr) return;
-          if (activeState === abbr) { clearStateFilter(); return; }
-          activeState = abbr;
+          var name = wvCountyNames[d.id] || null;
+          if (!name) return;
+          if (activeCounty === name) { clearCountyFilter(); return; }
+          activeCounty = name;
           updateHeatmap();
           renderFeed();
           document.getElementById('feed-list').scrollTop = 0;
-          var count = getCaseCounts()[abbr] || 0;
+          var counts = getCaseCounts();
+          var count = counts[name] || 0;
           var banner = document.getElementById('state-banner');
           banner.style.display = 'block';
-          banner.textContent = '📍 ' + (stateNames[abbr]||abbr) + ' — ' + count + ' case' + (count!==1?'s':'') + ' — Click to clear';
+          banner.textContent = '📍 ' + name + ' County — ' + count + ' case' + (count!==1?'s':'') + ' — Click to clear';
         });
-      svg.append('path').datum(topojson.mesh(us, us.objects.states, function(a,b){ return a!==b; }))
-        .attr('fill','none').attr('stroke','#1a2540').attr('stroke-width',0.5).attr('d',path);
+
+      // County borders
+      svg.append('path')
+        .datum(topojson.mesh(us, us.objects.counties, function(a,b){
+          return a !== b && String(a.id).startsWith('54') && String(b.id).startsWith('54');
+        }))
+        .attr('fill','none')
+        .attr('stroke','#1e2d4a')
+        .attr('stroke-width', 0.5)
+        .attr('d', path);
+
+      // WV outer border
+      svg.append('path')
+        .datum(topojson.mesh(us, us.objects.states, function(a,b){ return a.id === 54 || b.id === 54; }))
+        .attr('fill','none')
+        .attr('stroke','#2a3f6a')
+        .attr('stroke-width', 1.5)
+        .attr('d', path);
+
       updateHeatmap();
     });
 }
 
+// WV county FIPS to name mapping
+var wvCountyNames = {
+  '54001':'Barbour','54003':'Berkeley','54005':'Boone','54007':'Braxton',
+  '54009':'Brooke','54011':'Cabell','54013':'Calhoun','54015':'Clay',
+  '54017':'Doddridge','54019':'Fayette','54021':'Gilmer','54023':'Grant',
+  '54025':'Greenbrier','54027':'Hampshire','54029':'Hancock','54031':'Hardy',
+  '54033':'Harrison','54035':'Jackson','54037':'Jefferson','54039':'Kanawha',
+  '54041':'Lewis','54043':'Lincoln','54045':'Logan','54047':'Marion',
+  '54049':'Marshall','54051':'Mason','54053':'McDowell','54055':'Mercer',
+  '54057':'Mineral','54059':'Mingo','54061':'Monongalia','54063':'Monroe',
+  '54065':'Morgan','54067':'Nicholas','54069':'Ohio','54071':'Pendleton',
+  '54073':'Pleasants','54075':'Pocahontas','54077':'Preston','54079':'Putnam',
+  '54081':'Raleigh','54083':'Randolph','54085':'Ritchie','54087':'Roane',
+  '54089':'Summers','54091':'Taylor','54093':'Tucker','54095':'Tyler',
+  '54097':'Upshur','54099':'Wayne','54101':'Webster','54103':'Wetzel',
+  '54105':'Wirt','54107':'Wood','54109':'Wyoming'
+};
+
 function getCaseCounts() {
   var counts = {};
   var list = activeFilter === 'all' ? cases : getFiltered();
-  // Only count active/endangered/cold cases in heatmap — not found
   list.filter(function(c){ return c.status !== 'found-safe' && c.status !== 'found-deceased'; })
-    .forEach(function(c){ counts[c.state] = (counts[c.state]||0) + 1; });
+    .forEach(function(c){
+      // Match city to county name
+      var county = cityToCounty[c.city] || c.city;
+      counts[county] = (counts[county]||0) + 1;
+    });
   return counts;
 }
+
+// City to county lookup for WV — add more as cases come in
+var cityToCounty = {
+  'Charleston':'Kanawha','South Charleston':'Kanawha','Dunbar':'Kanawha',
+  'St. Albans':'Kanawha','Big Chimney':'Kanawha','Nitro':'Kanawha',
+  'Huntington':'Cabell','Barboursville':'Cabell','Milton':'Cabell',
+  'Morgantown':'Monongalia','Star City':'Monongalia',
+  'Parkersburg':'Wood','Vienna':'Wood','Williamstown':'Wood',
+  'Wheeling':'Ohio','Weirton':'Hancock','Chester':'Hancock',
+  'Martinsburg':'Berkeley','Shepherdstown':'Jefferson','Charles Town':'Jefferson',
+  'Clarksburg':'Harrison','Bridgeport':'Harrison','Shinnston':'Harrison',
+  'Fairmont':'Marion','Mannington':'Marion',
+  'Beckley':'Raleigh','Lewisburg':'Greenbrier','Bluefield':'Mercer',
+  'Point Pleasant':'Mason','Logan':'Logan','Williamson':'Mingo',
+  'Elkins':'Randolph','Buckhannon':'Upshur','Weston':'Lewis',
+  'Fayetteville':'Fayette','Oak Hill':'Fayette',
+  'Moorefield':'Hardy','Petersburg':'Grant','Romney':'Hampshire',
+  'Keyser':'Mineral','Philippi':'Barbour','Spencer':'Roane',
+  'Glenville':'Gilmer','Sutton':'Braxton','Summersville':'Nicholas',
+  'Ripley':'Jackson','Ravenswood':'Jackson','Grantsville':'Calhoun',
+  'Welch':'McDowell','Princeton':'Mercer','Hinton':'Summers',
+  'Marlinton':'Pocahontas','Harrisville':'Ritchie','Elizabeth':'Wirt',
+  'New Martinsville':'Wetzel','Sistersville':'Tyler','Middlebourne':'Tyler',
+  'Kingwood':'Preston','Terra Alta':'Preston','Grafton':'Taylor',
+  'Parsons':'Tucker','Paw Paw':'Morgan','Berkeley Springs':'Morgan'
+};
 
 function updateHeatmap() {
   var counts = getCaseCounts();
   var max = Math.max(1, d3.max(Object.values(counts)) || 1);
-  d3.selectAll('.state').attr('fill', function(d) {
-    var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
-    var count = counts[abbr] || 0;
-    var isSelected = activeState && activeState === abbr;
-    if (isSelected) return 'rgba(245,158,11,0.2)';
+  d3.selectAll('.county').attr('fill', function(d) {
+    var name = wvCountyNames[d.id] || wvCountyNames[String(d.id)];
+    var count = counts[name] || 0;
+    var isSelected = activeCounty && activeCounty === name;
+    if (isSelected) return 'rgba(245,158,11,0.3)';
     if (count === 0) return '#0d1525';
     var intensity = count / max;
-    if (intensity < 0.33) return 'rgba(239,68,68,0.25)';
-    if (intensity < 0.66) return 'rgba(239,68,68,0.55)';
+    if (intensity < 0.33) return 'rgba(239,68,68,0.35)';
+    if (intensity < 0.66) return 'rgba(239,68,68,0.60)';
     return 'rgba(239,68,68,0.88)';
   }).attr('stroke', function(d) {
-    var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
-    return (activeState && activeState === abbr) ? 'rgba(245,158,11,0.9)' : '#1a2540';
+    var name = wvCountyNames[d.id] || wvCountyNames[String(d.id)];
+    return (activeCounty && activeCounty === name) ? 'rgba(245,158,11,0.9)' : '#1a2540';
   }).attr('stroke-width', function(d) {
-    var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
-    return (activeState && activeState === abbr) ? 1.5 : 0.5;
+    var name = wvCountyNames[d.id] || wvCountyNames[String(d.id)];
+    return (activeCounty && activeCounty === name) ? 2 : 0.8;
   });
 }
 
-function clearStateFilter() {
-  activeState = null;
+function clearCountyFilter() {
+  activeCounty = null;
   document.getElementById('state-banner').style.display = 'none';
   updateHeatmap();
   renderFeed();
 }
+
 
 // Feed
 function renderFeed() {
   var list = getFiltered();
   document.getElementById('feed-count').textContent = list.length + ' case' + (list.length !== 1 ? 's' : '');
   var titleEl = document.getElementById('feed-title');
-  titleEl.textContent = activeState ? (stateNames[activeState]||activeState) + ' Cases' : 'Case Feed';
+  titleEl.textContent = activeCounty ? activeCounty + ' County Cases' : 'Case Feed';
 
   var el = document.getElementById('feed-list');
   if (!list.length) {
     el.innerHTML = '<div class="feed-empty"><div class="feed-empty-icon">🔍</div>'
-      + (searchQuery ? 'No cases match "' + searchQuery + '"' : activeState ? 'No cases in ' + (stateNames[activeState]||activeState) + ' yet.<br><br>Know of a missing person from this state?<br><button onclick="openForm()" style="margin-top:0.75rem;background:var(--blue);border:none;color:#fff;font-family:var(--sans);font-size:12px;font-weight:600;padding:8px 18px;cursor:pointer;border-radius:4px;">Submit a Case</button>' : 'No cases match the current filter.')
+      + (searchQuery ? 'No cases match "' + searchQuery + '"' : activeCounty ? 'No cases in ' + activeCounty + ' County yet.<br><br>Know of a missing person from this area?<br><button onclick="openForm()" style="margin-top:0.75rem;background:var(--blue);border:none;color:#fff;font-family:var(--sans);font-size:12px;font-weight:600;padding:8px 18px;cursor:pointer;border-radius:4px;">Submit a Case</button>' : 'No cases match the current filter.')
       + '</div>';
     return;
   }
