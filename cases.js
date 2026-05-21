@@ -1306,20 +1306,25 @@ function checkHash() {
 document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeCase(); closeForm(); } });
 
 // Init
-// Render feed immediately — don't wait for map
-updateStats();
-updateBottomStats();
-renderFeed();
-buildTicker();
-checkHash();
+function init() {
+  updateStats();
+  updateBottomStats();
+  renderFeed();
+  buildTicker();
+  checkHash();
 
-// Then load map
-var topoScript = document.createElement('script');
-topoScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js';
-topoScript.onload = function() {
-  initMap();
-};
-document.head.appendChild(topoScript);
+  // Load map
+  var topoScript = document.createElement('script');
+  topoScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js';
+  topoScript.onload = function() { initMap(); };
+  document.head.appendChild(topoScript);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
 </body>
 </html>
