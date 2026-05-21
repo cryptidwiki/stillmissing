@@ -1,1287 +1,2091 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STILLMISSING.US — West Virginia Missing Persons Database</title>
-<meta name="description" content="A community-powered missing persons database for West Virginia. Submit cases, share tips, and help bring people home.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --navy: #0a0e1a;
-  --navy2: #0d1220;
-  --navy3: #111829;
-  --navy4: #162035;
-  --blue: #1a56db;
-  --blue2: #1e429f;
-  --blue-soft: rgba(26,86,219,0.12);
-  --amber: #f59e0b;
-  --amber2: rgba(245,158,11,0.12);
-  --teal: #0d9488;
-  --teal2: rgba(13,148,136,0.12);
-  --red: #ef4444;
-  --red2: rgba(239,68,68,0.12);
-  --text: #f1f5f9;
-  --text2: rgba(241,245,249,0.65);
-  --text3: rgba(241,245,249,0.35);
-  --border: rgba(241,245,249,0.08);
-  --border2: rgba(241,245,249,0.15);
-  --mono: 'JetBrains Mono', monospace;
-  --sans: 'Inter', sans-serif;
-  --serif: 'DM Serif Display', serif;
-}
+// ═══════════════════════════════════════════════════
+// STILLMISSING.US — CASE DATABASE
+// ═══════════════════════════════════════════════════
+// Next ID: sm-104
+// To add a new case, copy the template and paste
+// it before the last ]; then push to GitHub.
+//
+// TEMPLATE:
+// {
+//   id: "sm-104",
+//   name: "Full Name",
+//   age_missing: 25,
+//   dob: "",
+//   date_missing: "2024-03-10",
+//   status: "active",   // active / endangered / cold / found-safe / found-deceased
+//   city: "Charleston",
+//   state: "WV",
+//   height: "",
+//   weight: "",
+//   hair: "",
+//   eyes: "",
+//   distinguishing: "",
+//   circumstances: "",
+//   case_number: "",
+//   namus_url: "",
+//   photo: ""
+// },
+// ═══════════════════════════════════════════════════
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { background: var(--navy); color: var(--text); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
+var cases = [
+  {
+    id: "sm-001",
+    name: "Shayln Shantel Harvey",
+    age_missing: 16,
+    dob: "",
+    date_missing: "2026-05-02",
+    status: "found-deceased",
+    city: "Big Chimney",
+    state: "WV",
+    height: "5'3\"",
+    weight: "160 lbs",
+    hair: "Brown",
+    eyes: "Brown",
+    distinguishing: "Wrist tattoo reading '4-19-19 Lena B.' Necklace with letter 'J' charm. Last seen wearing black sweatpants and a blue shirt. May have left in a blue Dodge Ram pickup truck from the early 2000s.",
+    circumstances: "Shayln was last seen in the Big Chimney area of Kanawha County, WV on Saturday, May 2, 2026. The Kanawha County Sheriff's Office requested public assistance in locating her. She was 16 years old at the time of her disappearance.",
+    case_number: "",
+    namus_url: "",
+    photo: "images/shalyn-harvey.png"
+  },
 
-/* STICKY WRAP */
-.sticky-wrap { position: sticky; top: 0; z-index: 100; }
+  {
+    id: "sm-002",
+    name: "Michael Allen Dillard",
+    age_missing: 15,
+    dob: "",
+    date_missing: "2018-01-11",
+    status: "active",
+    city: "Calvin",
+    state: "WV",
+    height: "5'5\"",
+    weight: "133 lbs",
+    hair: "Brown",
+    eyes: "Hazel",
+    distinguishing: "Scars on arms. Was not wearing warm clothing at time of disappearance. Did not have his phone or glasses with him.",
+    circumstances: "On January 11, 2018, 15-year-old Michael disappeared from his family home in Calvin, WV at approximately 4:30pm while helping his mother carry wood pellets from the car. Without a word, he ran into the woods behind the house and never returned. Temperatures that night dropped to around 20 degrees with rain and fog. Michael had no phone, no glasses, and no warm clothing — only two dollars in his pocket. A large search involving a helicopter, bloodhounds, and dive teams found only his jacket approximately 300 yards from his home, discovered about a week and a half later. Michael had been released from a mental health treatment center just three weeks prior. In October 2024, state police investigated a tip regarding possible remains but the lead was ruled not credible. The case remains active.",
+    case_number: "NamUs 1318364",
+    namus_url: "https://namus.nij.ojp.gov/case#/1318364",
+    photo: ""
+  },
 
-/* ALERT BAR */
-.alert-bar { background: var(--blue); padding: 7px 1.5rem; display: flex; align-items: center; gap: 1rem; overflow: hidden; }
-.alert-bar-label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: #fff; white-space: nowrap; flex-shrink: 0; background: rgba(0,0,0,0.2); padding: 2px 8px; font-family: var(--mono); }
-.alert-ticker { display: flex; overflow: hidden; flex: 1; }
-.alert-text { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); white-space: nowrap; animation: ticker 35s linear infinite; letter-spacing: 0.03em; }
-@keyframes ticker { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
-.alert-time { font-size: 10px; font-family: var(--mono); color: rgba(255,255,255,0.6); white-space: nowrap; flex-shrink: 0; }
+  {
+    id: "sm-003",
+    name: "Charnayjia Peterkin",
+    age_missing: 15,
+    dob: "",
+    date_missing: "2025-12-13",
+    status: "found-safe",
+    city: "Cross Lanes",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "Black",
+    eyes: "Brown",
+    distinguishing: "Last seen wearing cream colored top and bottom sweatsuit. May have left in a boxy blue older model sedan.",
+    circumstances: "Charnayjia, 15, went missing on December 13, 2025 from the Cross Lanes area of Kanawha County after leaving WVDHHR custody. She was located by the Kanawha County Sheriff's Office on March 11, 2026.",
+    case_number: "NamUs 2071656",
+    namus_url: "https://namus.nij.ojp.gov/case#/2071656",
+    photo: ""
+  },
 
-/* HEADER */
-.site-header { background: var(--navy2); border-bottom: 1px solid var(--border2); padding: 0.75rem 1.5rem; display: flex; align-items: center; gap: 1.5rem; }
-.logo-wrap { display: flex; flex-direction: column; }
-.logo-title { font-family: var(--serif); font-size: 24px; color: var(--text); line-height: 1; letter-spacing: 0.01em; }
-.logo-title span { color: var(--blue); }
-.logo-sub { font-size: 9px; letter-spacing: 0.2em; color: var(--text3); margin-top: 3px; font-family: var(--mono); text-transform: uppercase; }
-.header-search { flex: 1; max-width: 400px; position: relative; }
-.header-search input { width: 100%; background: var(--navy3); border: 1px solid var(--border2); color: var(--text); font-family: var(--sans); font-size: 13px; padding: 8px 12px 8px 36px; outline: none; border-radius: 4px; }
-.header-search input::placeholder { color: var(--text3); }
-.header-search input:focus { border-color: var(--blue); }
-.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; pointer-events: none; }
-.header-stats { display: flex; gap: 2rem; margin-left: auto; }
-.hstat-num { font-family: var(--mono); font-size: 20px; font-weight: 500; line-height: 1; }
-.hstat-num.blue { color: var(--blue); }
-.hstat-num.amber { color: var(--amber); }
-.hstat-num.teal { color: var(--teal); }
-.hstat-label { font-size: 9px; letter-spacing: 0.15em; color: var(--text3); margin-top: 2px; text-transform: uppercase; }
-.submit-btn { font-family: var(--sans); font-size: 13px; font-weight: 600; letter-spacing: 0.05em; padding: 9px 20px; background: var(--blue); color: #fff; border: none; cursor: pointer; border-radius: 4px; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
-.submit-btn:hover { background: var(--blue2); transform: translateY(-1px); }
+  {
+    id: "sm-004",
+    name: "Ataysheon Smith",
+    age_missing: 17,
+    dob: "",
+    date_missing: "2026-04-20",
+    status: "active",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "Brown",
+    eyes: "Brown",
+    distinguishing: "",
+    circumstances: "Ataysheon, 17, was reported missing from Charleston, WV on April 20, 2026. The case is being investigated by the Charleston Police Department. He is also listed with the National Center for Missing & Exploited Children.",
+    case_number: "NamUs 2085148",
+    namus_url: "https://namus.nij.ojp.gov/case#/2085148",
+    photo: ""
+  },
 
-/* FILTER BAR */
-.filter-bar { background: var(--navy3); border-bottom: 1px solid var(--border); padding: 0.5rem 1.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.filter-label { font-size: 10px; letter-spacing: 0.15em; color: var(--text3); white-space: nowrap; font-family: var(--mono); margin-right: 4px; }
-.fbtn { font-family: var(--sans); font-size: 12px; font-weight: 500; padding: 4px 12px; border: 1px solid var(--border2); background: transparent; color: var(--text2); cursor: pointer; transition: all 0.12s; border-radius: 20px; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
-.fbtn:hover { border-color: var(--text); color: var(--text); }
-.fbtn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
-.fbtn-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.filter-divider { color: var(--border2); font-size: 16px; margin: 0 4px; flex-shrink: 0; }
-.sort-wrap { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
-.sort-select { background: var(--navy3); border: 1px solid var(--border2); color: var(--text2); font-family: var(--sans); font-size: 12px; padding: 4px 10px; outline: none; cursor: pointer; border-radius: 4px; }
 
-/* MAIN LAYOUT */
-.main-layout { display: grid; grid-template-columns: 1fr 420px; height: calc(100vh - 118px); }
+  {
+    id: "sm-005",
+    name: "Brandi Dotson",
+    age_missing: 27,
+    dob: "",
+    date_missing: "2026-01-11",
+    status: "active",
+    city: "Dunbar",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Brandi Dotson was last seen in Dunbar, Kanawha County, WV on 2026-01-11. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 157017",
+    namus_url: "https://namus.nij.ojp.gov/case#/157017",
+    photo: ""
+  },
 
-/* MAP */
-.map-section { position: relative; background: var(--navy); overflow: hidden; border-right: 1px solid var(--border2); }
-.map-header { position: absolute; top: 0; left: 0; right: 0; padding: 0.75rem 1rem; background: linear-gradient(to bottom, rgba(10,14,26,0.98), transparent); z-index: 10; display: flex; align-items: center; justify-content: space-between; }
-.map-title { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; color: var(--amber); text-transform: uppercase; }
-.map-hint { font-size: 10px; color: var(--text3); letter-spacing: 0.08em; }
-#map-container { width: 100%; height: 100%; }
-#map-container svg { width: 100%; height: 100%; display: block; }
-.state { fill: #0d1525; stroke: #1a2540; stroke-width: 0.5; cursor: pointer; transition: fill 0.15s; }
-.state:hover { fill: #162035; }
-.state.active { stroke: var(--amber); stroke-width: 1.5; }
-.state-tooltip { position: absolute; background: rgba(10,14,26,0.96); border: 1px solid var(--border2); padding: 6px 12px; font-size: 11px; font-family: var(--sans); color: var(--text); pointer-events: none; z-index: 50; display: none; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-.state-banner { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); background: rgba(10,14,26,0.92); border: 1px solid var(--amber); padding: 7px 20px; font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--amber); display: none; z-index: 10; cursor: pointer; white-space: nowrap; border-radius: 4px; }
-.state-banner:hover { background: rgba(245,158,11,0.1); }
-.map-legend { position: absolute; bottom: 1rem; left: 1rem; background: rgba(10,14,26,0.92); border: 1px solid var(--border2); padding: 0.6rem 0.75rem; z-index: 10; border-radius: 4px; }
-.legend-title { font-size: 8px; letter-spacing: 0.2em; color: var(--text3); margin-bottom: 6px; font-family: var(--mono); text-transform: uppercase; }
-.legend-items { display: flex; gap: 8px; align-items: center; }
-.legend-item { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--text3); }
-.legend-swatch { width: 18px; height: 8px; border-radius: 2px; }
+  {
+    id: "sm-006",
+    name: "Joseph Abreu",
+    age_missing: 36,
+    dob: "",
+    date_missing: "2024-11-26",
+    status: "active",
+    city: "Ranger",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Joseph Abreu was last seen in Ranger, Lincoln County, WV on 2024-11-26. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 150601",
+    namus_url: "https://namus.nij.ojp.gov/case#/150601",
+    photo: ""
+  },
 
-/* FEED */
-.feed-panel { background: var(--navy2); display: flex; flex-direction: column; overflow: hidden; }
-.feed-header { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.feed-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
-.feed-title { font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; color: var(--text); text-transform: uppercase; }
-.feed-count { font-size: 10px; color: var(--text3); font-family: var(--mono); }
-.feed-search-wrap { position: relative; }
-.feed-search { width: 100%; background: var(--navy3); border: 1px solid var(--border); color: var(--text); font-family: var(--sans); font-size: 12px; padding: 6px 10px 6px 30px; outline: none; border-radius: 4px; }
-.feed-search::placeholder { color: var(--text3); }
-.feed-search:focus { border-color: var(--blue); }
-.feed-search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--text3); pointer-events: none; }
-.feed-list { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border2) transparent; }
-.feed-empty { padding: 3rem 1.5rem; text-align: center; color: var(--text3); font-size: 12px; line-height: 1.8; }
-.feed-empty-icon { font-size: 32px; margin-bottom: 1rem; opacity: 0.4; }
+  {
+    id: "sm-007",
+    name: "Eugene Godfrey",
+    age_missing: 74,
+    dob: "",
+    date_missing: "2024-10-08",
+    status: "active",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Eugene Godfrey was last seen in Charleston, Kanawha County, WV on 2024-10-08. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 139779",
+    namus_url: "https://namus.nij.ojp.gov/case#/139779",
+    photo: ""
+  },
 
-/* CASE CARDS */
-.case-card { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; display: flex; gap: 0; overflow: hidden; }
-.case-card:hover { background: var(--navy3); }
-.case-photo { width: 80px; height: 100px; object-fit: cover; flex-shrink: 0; opacity: 0.9; }
-.case-photo-placeholder { width: 80px; height: 100px; background: var(--navy4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 28px; opacity: 0.4; }
-.case-info { padding: 0.75rem; flex: 1; min-width: 0; }
-.case-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 3px; gap: 0.5rem; }
-.case-name { font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.2; }
-.case-status { font-size: 9px; font-weight: 600; letter-spacing: 0.12em; padding: 2px 7px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; font-family: var(--mono); }
-.case-status.active { background: var(--red2); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
-.case-status.cold { background: var(--blue-soft); color: #93c5fd; border: 1px solid rgba(147,197,253,0.3); }
-.case-status.endangered { background: var(--amber2); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
-.case-status.found-safe { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
-.case-status.found-deceased { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
-.case-meta { font-size: 11px; color: var(--text3); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.case-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
-.case-location { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
-.case-desc { font-size: 11px; color: var(--text3); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.case-age-badge { display: inline-block; font-size: 9px; font-family: var(--mono); color: var(--text3); border: 1px solid var(--border); padding: 1px 6px; border-radius: 3px; margin-top: 4px; }
+  {
+    id: "sm-008",
+    name: "Aaron Mason",
+    age_missing: 33,
+    dob: "",
+    date_missing: "2024-10-07",
+    status: "active",
+    city: "Wheeling",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Aaron Mason was last seen in Wheeling, Ohio County, WV on 2024-10-07. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 132240",
+    namus_url: "https://namus.nij.ojp.gov/case#/132240",
+    photo: ""
+  },
 
-/* DETAIL MODAL */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 1.5rem; }
-.modal-overlay.open { display: flex; }
-.case-modal { background: var(--navy2); border: 1px solid var(--border2); width: min(680px,100%); max-height: 92vh; overflow-y: auto; border-radius: 6px; animation: modalIn 0.2s ease; }
-@keyframes modalIn { from{opacity:0;transform:scale(0.97);} to{opacity:1;transform:scale(1);} }
-.modal-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--navy2); z-index: 10; border-radius: 6px 6px 0 0; }
-.modal-header-left { display: flex; align-items: center; gap: 0.75rem; }
-.modal-case-id { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 0.15em; }
-.modal-close { background: transparent; border: 1px solid var(--border2); color: var(--text2); font-family: var(--sans); font-size: 12px; padding: 5px 14px; cursor: pointer; transition: all 0.12s; border-radius: 4px; }
-.modal-close:hover { border-color: var(--red); color: var(--red); }
-.modal-photo { width: 100%; max-height: 320px; object-fit: cover; object-position: top; display: block; }
-.modal-photo-placeholder { width: 100%; height: 200px; background: var(--navy4); display: flex; align-items: center; justify-content: center; font-size: 60px; opacity: 0.2; }
-.modal-body { padding: 1.5rem; }
-.modal-name { font-family: var(--serif); font-size: 32px; margin-bottom: 4px; line-height: 1.1; }
-.modal-status-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
-.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; background: var(--navy3); padding: 1rem; border-radius: 4px; border: 1px solid var(--border); }
-.modal-field-label { font-size: 9px; letter-spacing: 0.2em; color: var(--text3); margin-bottom: 3px; text-transform: uppercase; font-family: var(--mono); }
-.modal-field-val { font-size: 13px; color: var(--text); font-weight: 500; }
-.modal-section-title { font-size: 10px; letter-spacing: 0.2em; color: var(--blue); text-transform: uppercase; font-family: var(--mono); margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--blue-soft); }
-.modal-description { font-size: 13px; line-height: 1.8; color: var(--text2); margin-bottom: 1.5rem; }
-.modal-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-.action-btn { font-family: var(--sans); font-size: 12px; font-weight: 600; padding: 9px 18px; border-radius: 4px; cursor: pointer; transition: all 0.15s; text-decoration: none; display: flex; align-items: center; gap: 6px; border: 1px solid; }
-.action-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
-.action-btn.primary:hover { background: var(--blue2); }
-.action-btn.secondary { background: transparent; border-color: var(--border2); color: var(--text2); }
-.action-btn.secondary:hover { border-color: var(--text); color: var(--text); }
-.action-btn.danger { background: transparent; border-color: rgba(239,68,68,0.4); color: var(--red); }
-.action-btn.danger:hover { background: var(--red2); }
-.tip-form { background: var(--navy3); border: 1px solid var(--border); border-radius: 4px; padding: 1rem; margin-bottom: 1rem; }
-.tip-form textarea { width: 100%; background: var(--navy); border: 1px solid var(--border2); color: var(--text); font-family: var(--sans); font-size: 12px; padding: 8px 10px; outline: none; border-radius: 4px; resize: vertical; min-height: 80px; }
-.tip-form textarea:focus { border-color: var(--blue); }
-.tip-submit { margin-top: 0.5rem; font-family: var(--sans); font-size: 12px; font-weight: 600; padding: 7px 16px; background: var(--teal); border: none; color: #fff; cursor: pointer; border-radius: 4px; transition: all 0.15s; }
-.tip-submit:hover { opacity: 0.85; }
-.namus-link { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--blue); text-decoration: none; padding: 8px 12px; border: 1px solid var(--blue-soft); border-radius: 4px; transition: all 0.12s; }
-.namus-link:hover { background: var(--blue-soft); }
+  {
+    id: "sm-009",
+    name: "Jalen Jacobs",
+    age_missing: 28,
+    dob: "",
+    date_missing: "2024-03-01",
+    status: "active",
+    city: "Harts",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Jalen Jacobs was last seen in Harts, Logan County, WV on 2024-03-01. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 150702",
+    namus_url: "https://namus.nij.ojp.gov/case#/150702",
+    photo: ""
+  },
 
-/* SUBMIT FORM MODAL */
-.form-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 1000; align-items: center; justify-content: center; padding: 1.5rem; }
-.form-overlay.open { display: flex; }
-.form-modal { background: var(--navy2); border: 1px solid var(--border2); width: min(660px,100%); max-height: 92vh; overflow: hidden; display: flex; flex-direction: column; border-radius: 6px; animation: modalIn 0.2s ease; }
-.form-modal-header { padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-.form-modal-title { font-family: var(--sans); font-size: 14px; font-weight: 700; letter-spacing: 0.05em; }
-.form-modal-close { background: transparent; border: 1px solid var(--border2); color: var(--text2); font-family: var(--sans); font-size: 12px; padding: 4px 12px; cursor: pointer; border-radius: 4px; }
-.form-modal-close:hover { border-color: var(--red); color: var(--red); }
-.form-body { overflow-y: auto; padding: 1.5rem; flex: 1; }
-.form-notice { background: var(--blue-soft); border: 1px solid rgba(26,86,219,0.3); border-radius: 4px; padding: 0.75rem 1rem; font-size: 12px; color: #93c5fd; line-height: 1.6; margin-bottom: 1.25rem; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-.form-field { margin-bottom: 0.85rem; }
-.form-label { display: block; font-size: 10px; letter-spacing: 0.15em; color: var(--text3); margin-bottom: 5px; text-transform: uppercase; font-family: var(--mono); }
-.form-label span { color: var(--red); }
-.form-input { width: 100%; background: var(--navy3); border: 1px solid var(--border2); color: var(--text); font-family: var(--sans); font-size: 13px; padding: 8px 10px; outline: none; border-radius: 4px; transition: border-color 0.12s; }
-.form-input:focus { border-color: var(--blue); }
-.form-input option { background: var(--navy3); }
-.form-textarea { min-height: 100px; resize: vertical; }
-.form-note { font-size: 10px; color: var(--text3); margin-top: 4px; line-height: 1.5; }
-.form-submit { width: 100%; padding: 12px; background: var(--blue); color: #fff; border: none; font-family: var(--sans); font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.15s; border-radius: 4px; margin-top: 0.5rem; }
-.form-submit:hover { background: var(--blue2); }
-.form-submit:disabled { background: var(--border2); color: var(--text3); cursor: not-allowed; }
-.form-success { text-align: center; padding: 2.5rem 1.5rem; }
-.form-success-icon { font-size: 48px; margin-bottom: 1rem; }
-.form-success-title { font-family: var(--serif); font-size: 24px; margin-bottom: 0.5rem; }
-.form-success-sub { font-size: 13px; color: var(--text2); line-height: 1.7; }
+  {
+    id: "sm-010",
+    name: "Johnathon Woodward",
+    age_missing: 33,
+    dob: "",
+    date_missing: "2024-01-12",
+    status: "active",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Johnathon Woodward was last seen in Charleston, Kanawha County, WV on 2024-01-12. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 131706",
+    namus_url: "https://namus.nij.ojp.gov/case#/131706",
+    photo: ""
+  },
 
-/* MOBILE CLOSE BAR */
-.mobile-close-bar { display: none; position: sticky; bottom: 0; background: var(--navy2); border-top: 1px solid var(--border2); padding: 0.75rem 1rem; z-index: 20; }
-.mobile-close-btn { width: 100%; padding: 12px; background: var(--navy3); border: 1px solid var(--border2); color: var(--text); font-family: var(--sans); font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 4px; }
+  {
+    id: "sm-011",
+    name: "Weise Denny",
+    age_missing: 33,
+    dob: "",
+    date_missing: "2023-04-20",
+    status: "active",
+    city: "Handley",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Weise Denny was last seen in Handley, Kanawha County, WV on 2023-04-20. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 105024",
+    namus_url: "https://namus.nij.ojp.gov/case#/105024",
+    photo: ""
+  },
 
-/* SHARE TOAST */
-.share-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--navy3); border: 1px solid var(--border2); padding: 10px 20px; font-size: 12px; color: var(--text); border-radius: 4px; display: none; z-index: 2000; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-.share-toast.show { display: block; animation: toastIn 0.2s ease; }
-@keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(10px);} to{opacity:1;transform:translateX(-50%) translateY(0);} }
+  {
+    id: "sm-012",
+    name: "Carl Nicholson",
+    age_missing: 58,
+    dob: "",
+    date_missing: "2022-12-23",
+    status: "active",
+    city: "Anmoore",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Carl Nicholson was last seen in Anmoore, Harrison County, WV on 2022-12-23. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 112210",
+    namus_url: "https://namus.nij.ojp.gov/case#/112210",
+    photo: ""
+  },
 
-/* MOBILE */
-@media (max-width: 768px) {
-  .main-layout { grid-template-columns: 1fr; grid-template-rows: 45vh 1fr; height: auto; }
-  .feed-panel { height: 55vh; }
-  .header-stats { display: none; }
-  .site-header { padding: 0.6rem 1rem; gap: 0.75rem; flex-wrap: wrap; }
-  .logo-title { font-size: 20px; }
-  .logo-sub { display: none; }
-  .submit-btn { font-size: 11px; padding: 7px 14px; }
-  .filter-bar { padding: 0.4rem 0.75rem; overflow-x: auto; flex-wrap: nowrap; }
-  .fbtn { font-size: 11px; padding: 3px 10px; flex-shrink: 0; }
-  .map-legend { display: none; }
-  .case-modal { width: 100vw; max-height: 95vh; border-radius: 12px 12px 0 0; }
-  .modal-overlay { align-items: flex-end; padding: 0; }
-  .form-modal { width: 100vw; max-height: 95vh; border-radius: 12px 12px 0 0; }
-  .form-overlay { align-items: flex-end; padding: 0; }
-  .modal-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
-  .alert-bar { display: none; }
-  .sort-wrap { display: none; }
-  .mobile-close-bar { display: flex; }
-  .disclaimer-bar { flex-direction: column; gap: 0.25rem; }
-  .stats-bar { grid-template-columns: 1fr 1fr; }
-  .stat-block { border-right: none; border-bottom: 1px solid var(--border); }
-  .mission-resources { grid-template-columns: 1fr; }
-  .mission-section { border-right: none; border-bottom: 1px solid var(--border); }
-  .footer-links { display: none; }
-}
+  {
+    id: "sm-013",
+    name: "Gretchen Fleming",
+    age_missing: 27,
+    dob: "",
+    date_missing: "2022-12-04",
+    status: "active",
+    city: "Parkersburg",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Gretchen Fleming was last seen in Parkersburg, Wood County, WV on 2022-12-04. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 98598",
+    namus_url: "https://namus.nij.ojp.gov/case#/98598",
+    photo: ""
+  },
 
-/* SHARE GRID */
-.share-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem; }
-.share-btn { font-family: var(--sans); font-size: 12px; font-weight: 600; padding: 10px 8px; border-radius: 4px; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border2); background: var(--navy3); color: var(--text); text-align: center; }
-.share-btn:hover { transform: translateY(-1px); background: var(--navy4); }
-.share-btn.copy-link { background: var(--blue); border-color: var(--blue); color: #fff; }
-.share-btn.caption { background: var(--navy4); border-color: var(--border2); color: var(--text2); }
-.share-btn.secondary { background: var(--navy4); border-color: var(--border2); color: var(--text2); }
-@media (max-width: 480px) { .share-grid { grid-template-columns: 1fr 1fr; } }
-.bottom-sections { background: var(--navy2); border-top: 1px solid var(--border2); }
+  {
+    id: "sm-014",
+    name: "Brittany Duff",
+    age_missing: 32,
+    dob: "",
+    date_missing: "2022-06-12",
+    status: "active",
+    city: "Kermit",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Brittany Duff was last seen in Kermit, Mingo County, WV on 2022-06-12. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 106960",
+    namus_url: "https://namus.nij.ojp.gov/case#/106960",
+    photo: ""
+  },
 
-/* STATS BAR */
-.stats-bar { display: grid; grid-template-columns: repeat(4,1fr); border-bottom: 1px solid var(--border); }
-.stat-block { padding: 1.25rem 1.5rem; border-right: 1px solid var(--border); text-align: center; }
-.stat-block:last-child { border-right: none; }
-.stat-block-num { font-family: var(--mono); font-size: 32px; font-weight: 500; line-height: 1; margin-bottom: 4px; }
-.stat-block-num.red { color: var(--red); }
-.stat-block-num.amber { color: var(--amber); }
-.stat-block-num.blue { color: #93c5fd; }
-.stat-block-num.green { color: #10b981; }
-.stat-block-label { font-size: 10px; letter-spacing: 0.15em; color: var(--text3); text-transform: uppercase; }
+  {
+    id: "sm-015",
+    name: "Colby Macmillan",
+    age_missing: 25,
+    dob: "",
+    date_missing: "2022-03-10",
+    status: "active",
+    city: "Parkersburg",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Colby Macmillan was last seen in Parkersburg, Wood County, WV on 2022-03-10. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 100899",
+    namus_url: "https://namus.nij.ojp.gov/case#/100899",
+    photo: ""
+  },
 
-/* MISSION + RESOURCES */
-.mission-resources { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
-.mission-section { padding: 2rem 1.5rem; border-right: 1px solid var(--border); }
-.resources-section { padding: 2rem 1.5rem; }
-.section-tag { font-size: 9px; letter-spacing: 0.25em; color: var(--blue); font-family: var(--mono); text-transform: uppercase; margin-bottom: 8px; }
-.section-title { font-family: var(--serif); font-size: 22px; margin-bottom: 0.75rem; line-height: 1.2; }
-.section-text { font-size: 12px; line-height: 1.8; color: var(--text2); margin-bottom: 0.75rem; }
-.mission-points { list-style: none; margin-top: 0.75rem; }
-.mission-points li { font-size: 12px; color: var(--text2); padding: 5px 0 5px 1rem; border-bottom: 1px solid var(--border); position: relative; line-height: 1.5; }
-.mission-points li::before { content: '→'; position: absolute; left: 0; color: var(--blue); font-size: 10px; }
-.mission-points li:last-child { border-bottom: none; }
-.resource-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; transition: all 0.12s; margin-bottom: 0.5rem; }
-.resource-link:hover { border-color: var(--blue); background: var(--blue-soft); }
-.resource-icon { font-size: 20px; flex-shrink: 0; }
-.resource-info { flex: 1; }
-.resource-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-.resource-desc { font-size: 11px; color: var(--text3); }
-.resource-arrow { color: var(--text3); font-size: 12px; }
+  {
+    id: "sm-016",
+    name: "Grace Smith",
+    age_missing: 34,
+    dob: "",
+    date_missing: "2022-02-23",
+    status: "active",
+    city: "Gallipolis Ferry",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Grace Smith was last seen in Gallipolis Ferry, Mason County, WV on 2022-02-23. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 90111",
+    namus_url: "https://namus.nij.ojp.gov/case#/90111",
+    photo: ""
+  },
 
-/* FOOTER */
-.site-footer { padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: var(--text3); letter-spacing: 0.08em; flex-wrap: wrap; gap: 0.5rem; border-top: 1px solid var(--border); }
-.footer-links { display: flex; gap: 1.5rem; }
-.footer-link { color: var(--text3); text-decoration: none; font-size: 10px; }
-.footer-link:hover { color: var(--text); }
+  {
+    id: "sm-017",
+    name: "Alyssa Smith",
+    age_missing: 25,
+    dob: "",
+    date_missing: "2022-02-01",
+    status: "active",
+    city: "Chelyan",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Alyssa Smith was last seen in Chelyan, Kanawha County, WV on 2022-02-01. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 95426",
+    namus_url: "https://namus.nij.ojp.gov/case#/95426",
+    photo: ""
+  },
 
-/* PRINT FLYER */
-.flyer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; padding: 1.5rem; }
-.flyer-overlay.open { display: flex; }
-.flyer-container { background: white; color: #111; width: min(600px,100%); max-height: 90vh; overflow-y: auto; border-radius: 4px; }
-.flyer-header-bar { background: #1a1a2e; color: white; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; }
-.flyer-header-title { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; }
-.flyer-close { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; font-size: 11px; padding: 4px 12px; cursor: pointer; border-radius: 3px; }
-.flyer-print-btn { background: #1a56db; border: none; color: white; font-size: 12px; font-weight: 600; padding: 6px 16px; cursor: pointer; border-radius: 3px; }
-.flyer-content { padding: 2rem; }
-.flyer-top { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; align-items: flex-start; }
-.flyer-photo { width: 160px; height: 200px; object-fit: cover; object-position: top; flex-shrink: 0; border: 2px solid #ddd; }
-.flyer-photo-placeholder { width: 160px; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 48px; color: #ccc; flex-shrink: 0; border: 2px solid #ddd; }
-.flyer-headline { flex: 1; }
-.flyer-missing-label { font-size: 11px; font-weight: 700; letter-spacing: 0.3em; color: #cc0000; margin-bottom: 4px; }
-.flyer-name { font-size: 28px; font-weight: 700; color: #111; line-height: 1.1; margin-bottom: 8px; }
-.flyer-status-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 3px; letter-spacing: 0.1em; margin-bottom: 12px; }
-.flyer-status-badge.found-deceased { background: #f0f0f0; color: #555; }
-.flyer-status-badge.found-safe { background: #d1fae5; color: #065f46; }
-.flyer-status-badge.active { background: #fee2e2; color: #cc0000; }
-.flyer-status-badge.endangered { background: #fef3c7; color: #92400e; }
-.flyer-status-badge.cold { background: #dbeafe; color: #1e40af; }
-.flyer-detail-row { display: flex; gap: 0.5rem; margin-bottom: 4px; font-size: 12px; }
-.flyer-detail-label { font-weight: 600; color: #555; min-width: 80px; }
-.flyer-detail-val { color: #111; }
-.flyer-section-title { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: #666; text-transform: uppercase; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin: 1rem 0 0.5rem; }
-.flyer-circumstances { font-size: 12px; line-height: 1.7; color: #333; }
-.flyer-footer { margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #cc0000; display: flex; align-items: center; justify-content: space-between; }
-.flyer-footer-left { font-size: 10px; color: #666; line-height: 1.5; }
-.flyer-footer-site { font-size: 13px; font-weight: 700; color: #1a56db; }
-.flyer-tip-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: 3px; padding: 8px 12px; margin-top: 1rem; font-size: 11px; color: #856404; text-align: center; font-weight: 600; }
+  {
+    id: "sm-018",
+    name: "Jeremiah Erb",
+    age_missing: 40,
+    dob: "",
+    date_missing: "2021-12-26",
+    status: "active",
+    city: "Morgantown",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Jeremiah Erb was last seen in Morgantown, Monongalia County, WV on 2021-12-26. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 124501",
+    namus_url: "https://namus.nij.ojp.gov/case#/124501",
+    photo: ""
+  },
 
-@media print {
-  body * { visibility: hidden; }
-  .flyer-content, .flyer-content * { visibility: visible; }
-  .flyer-content { position: fixed; left: 0; top: 0; width: 100%; }
-  .flyer-header-bar { display: none; }
-}
-</style>
-</head>
-<body>
+  {
+    id: "sm-019",
+    name: "Richard Webb",
+    age_missing: 68,
+    dob: "",
+    date_missing: "2021-12-15",
+    status: "active",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Richard Webb was last seen in Charleston, Kanawha County, WV on 2021-12-15. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 90305",
+    namus_url: "https://namus.nij.ojp.gov/case#/90305",
+    photo: ""
+  },
 
-<div class="sticky-wrap">
-<!-- ALERT BAR -->
-<div class="alert-bar">
-  <span class="alert-bar-label">⚡ ACTIVE</span>
-  <div class="alert-ticker">
-    <span class="alert-text" id="alert-text">Loading active cases...</span>
-    <span class="alert-text" id="alert-text2"></span>
-  </div>
-  <span class="alert-time" id="alert-time"></span>
-</div>
+  {
+    id: "sm-020",
+    name: "Wayne Umble",
+    age_missing: 36,
+    dob: "",
+    date_missing: "2021-08-18",
+    status: "active",
+    city: "Jane Lew",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Wayne Umble was last seen in Jane Lew, Lewis County, WV on 2021-08-18. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 157358",
+    namus_url: "https://namus.nij.ojp.gov/case#/157358",
+    photo: ""
+  },
 
-<!-- HEADER -->
-<header class="site-header">
-  <div class="logo-wrap">
-    <div class="logo-title">Still<span>Missing</span>.us</div>
-    <div class="logo-sub">West Virginia Missing Persons Database</div>
-  </div>
-  <div class="header-search">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="main-search" placeholder="Search by name, location, case number...">
-  </div>
-  <div class="header-stats">
-    <div class="hstat"><div class="hstat-num blue" id="total-cases">0</div><div class="hstat-label">Cases</div></div>
-    <div class="hstat"><div class="hstat-num amber" id="active-cases">0</div><div class="hstat-label">Active</div></div>
-    <div class="hstat"><div class="hstat-num teal" id="states-count">0</div><div class="hstat-label">Counties</div></div>
-  </div>
-  <button class="submit-btn" onclick="openForm()">+ Submit a Case</button>
-</header>
+  {
+    id: "sm-021",
+    name: "Charles Hackett",
+    age_missing: 40,
+    dob: "",
+    date_missing: "2021-06-25",
+    status: "active",
+    city: "Kingwood",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Charles Hackett was last seen in Kingwood, Preston County, WV on 2021-06-25. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 81840",
+    namus_url: "https://namus.nij.ojp.gov/case#/81840",
+    photo: ""
+  },
 
-<!-- FILTER BAR -->
-<div class="filter-bar">
-  <span class="filter-label">Status:</span>
-  <button class="fbtn active" data-filter="all" data-type="status"><span class="fbtn-dot" style="background:var(--text)"></span>All</button>
-  <button class="fbtn" data-filter="active" data-type="status"><span class="fbtn-dot" style="background:var(--red)"></span>Active</button>
-  <button class="fbtn" data-filter="endangered" data-type="status"><span class="fbtn-dot" style="background:var(--amber)"></span>Endangered</button>
-  <button class="fbtn" data-filter="cold" data-type="status"><span class="fbtn-dot" style="background:#93c5fd"></span>Cold</button>
-  <button class="fbtn" data-filter="found-safe" data-type="status"><span class="fbtn-dot" style="background:#10b981"></span>Found Safe</button>
-  <button class="fbtn" data-filter="found-deceased" data-type="status"><span class="fbtn-dot" style="background:#9ca3af"></span>Found Deceased</button>
-  <span class="filter-divider">|</span>
-  <span class="filter-label">Age:</span>
-  <button class="fbtn active" data-filter="all" data-type="age"><span class="fbtn-dot" style="background:var(--text)"></span>All Ages</button>
-  <button class="fbtn" data-filter="child" data-type="age"><span class="fbtn-dot" style="background:var(--teal)"></span>Children</button>
-  <button class="fbtn" data-filter="adult" data-type="age"><span class="fbtn-dot" style="background:#a78bfa"></span>Adults</button>
-  <div class="sort-wrap">
-    <select class="sort-select" id="sort-select">
-      <option value="newest">Newest First</option>
-      <option value="oldest">Oldest First</option>
-      <option value="name">Name A–Z</option>
-    </select>
-  </div>
-</div>
-</div><!-- end sticky-wrap -->
+  {
+    id: "sm-022",
+    name: "Linda Emerson",
+    age_missing: 51,
+    dob: "",
+    date_missing: "2021-04-21",
+    status: "active",
+    city: "Great Cacapon",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Linda Emerson was last seen in Great Cacapon, Morgan County, WV on 2021-04-21. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 123712",
+    namus_url: "https://namus.nij.ojp.gov/case#/123712",
+    photo: ""
+  },
 
-<!-- DISCLAIMER -->
-<div style="background:rgba(245,158,11,0.07);border-bottom:1px solid rgba(245,158,11,0.2);padding:8px 1.5rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
-  <span style="font-size:13px;">⚠️</span>
-  <p style="font-size:11px;color:rgba(241,245,249,0.55);line-height:1.5;flex:1;min-width:200px;">
-    <strong style="color:rgba(245,158,11,0.8);">Community Resource.</strong> StillMissing.us is a West Virginia community resource maintained by one person. All case information is submitted by the community and may be incomplete or inaccurate. This is not an official law enforcement database. Always contact the listed agency directly to report tips or verify information. Cases are reviewed before publishing but we cannot guarantee accuracy.
-  </p>
-</div>
+  {
+    id: "sm-023",
+    name: "David Gray",
+    age_missing: 39,
+    dob: "",
+    date_missing: "2021-02-25",
+    status: "active",
+    city: "Kearneysville",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "David Gray was last seen in Kearneysville, Jefferson County, WV on 2021-02-25. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 84005",
+    namus_url: "https://namus.nij.ojp.gov/case#/84005",
+    photo: ""
+  },
 
-<!-- MAIN LAYOUT -->
-<div class="main-layout">
-  <div class="map-section">
-    <div class="map-header">
-      <span class="map-title">// Live Case Map — WV Counties //</span>
-      <span class="map-hint">Click a county to filter cases</span>
-    </div>
-    <div id="map-container"></div>
-    <div class="state-tooltip" id="state-tooltip"></div>
-    <div class="state-banner" id="state-banner" onclick="clearCountyFilter()"></div>
-    <div class="map-legend">
-      <div class="legend-title">Cases per County</div>
-      <div class="legend-items">
-        <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.25)"></div>Low</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.55)"></div>Med</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.88)"></div>High</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:#0d1525;border:1px solid #1a2540"></div>None</div>
-      </div>
-    </div>
-  </div>
+  {
+    id: "sm-024",
+    name: "Charles Taylor",
+    age_missing: 39,
+    dob: "",
+    date_missing: "2020-09-18",
+    status: "active",
+    city: "Williamson",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Charles Taylor was last seen in Williamson, Mingo County, WV on 2020-09-18. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 92534",
+    namus_url: "https://namus.nij.ojp.gov/case#/92534",
+    photo: ""
+  },
 
-  <div class="feed-panel">
-    <div class="feed-header">
-      <div class="feed-header-top">
-        <div class="feed-title" id="feed-title">Case Feed</div>
-        <div class="feed-count" id="feed-count">0 cases</div>
-      </div>
-      <div class="feed-search-wrap">
-        <span class="feed-search-icon">🔍</span>
-        <input type="text" class="feed-search" id="feed-search" placeholder="Search cases...">
-      </div>
-    </div>
-    <div class="feed-list" id="feed-list"></div>
-  </div>
-</div>
+  {
+    id: "sm-025",
+    name: "Roy Mahan",
+    age_missing: 52,
+    dob: "",
+    date_missing: "2020-02-10",
+    status: "active",
+    city: "Eccles",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Roy Mahan was last seen in Eccles, Raleigh County, WV on 2020-02-10. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 65401",
+    namus_url: "https://namus.nij.ojp.gov/case#/65401",
+    photo: ""
+  },
 
-<!-- CASE DETAIL MODAL -->
-<div class="modal-overlay" id="case-overlay">
-  <div class="case-modal" id="case-modal-content"></div>
-</div>
+  {
+    id: "sm-026",
+    name: "Lori Sines",
+    age_missing: 36,
+    dob: "",
+    date_missing: "2019-10-13",
+    status: "active",
+    city: "Kingwood",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Lori Sines was last seen in Kingwood, Preston County, WV on 2019-10-13. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 81811",
+    namus_url: "https://namus.nij.ojp.gov/case#/81811",
+    photo: ""
+  },
 
-<!-- SUBMIT FORM MODAL -->
-<div class="form-overlay" id="form-overlay">
-  <div class="form-modal">
-    <div class="form-modal-header">
-      <div class="form-modal-title">Submit a Missing Person Case</div>
-      <button class="form-modal-close" onclick="closeForm()">✕ Close</button>
-    </div>
-    <div class="form-body">
-      <div class="form-notice">
-        ℹ️ All submissions are reviewed before being published. Only publicly available information will be displayed. Families may request removal at any time. Please include an official case number if one exists.
-      </div>
-      <form id="submit-form" action="https://formspree.io/f/xojbdjbq" method="POST">
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">First Name <span>*</span></label>
-            <input type="text" name="first_name" class="form-input" required placeholder="First name">
-          </div>
-          <div class="form-field">
-            <label class="form-label">Last Name <span>*</span></label>
-            <input type="text" name="last_name" class="form-input" required placeholder="Last name">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">Date of Birth</label>
-            <input type="date" name="dob" class="form-input">
-          </div>
-          <div class="form-field">
-            <label class="form-label">Age at Disappearance <span>*</span></label>
-            <input type="number" name="age" class="form-input" required placeholder="Age" min="0" max="120">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">Date Last Seen <span>*</span></label>
-            <input type="date" name="date_missing" class="form-input" required>
-          </div>
-          <div class="form-field">
-            <label class="form-label">Case Status <span>*</span></label>
-            <select name="status" class="form-input" required>
-              <option value="">— Select —</option>
-              <option value="active">Active — Recent</option>
-              <option value="endangered">Endangered Missing</option>
-              <option value="cold">Cold Case</option>
-              <option value="found-safe">Found — Safe</option>
-              <option value="found-deceased">Found — Deceased</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">City Last Seen <span>*</span></label>
-            <input type="text" name="city" class="form-input" required placeholder="City">
-          </div>
-          <div class="form-field">
-            <label class="form-label">State</label>
-            <input type="text" name="state" class="form-input" value="WV" readonly style="color:var(--text3);cursor:not-allowed;">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">Height</label>
-            <input type="text" name="height" class="form-input" placeholder="e.g. 5'6&quot;">
-          </div>
-          <div class="form-field">
-            <label class="form-label">Weight</label>
-            <input type="text" name="weight" class="form-input" placeholder="e.g. 130 lbs">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">Hair Color</label>
-            <input type="text" name="hair" class="form-input" placeholder="Hair color">
-          </div>
-          <div class="form-field">
-            <label class="form-label">Eye Color</label>
-            <input type="text" name="eyes" class="form-input" placeholder="Eye color">
-          </div>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Distinguishing Features</label>
-          <input type="text" name="distinguishing" class="form-input" placeholder="Tattoos, scars, birthmarks, etc.">
-        </div>
-        <div class="form-field">
-          <label class="form-label">Circumstances of Disappearance <span>*</span></label>
-          <textarea name="circumstances" class="form-input form-textarea" required placeholder="Describe what is known about how and when this person went missing..."></textarea>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Official Case Number</label>
-          <input type="text" name="case_number" class="form-input" placeholder="NamUs, police report, or FBI case number">
-          <div class="form-note">If this person is listed on NamUs or another official database, please include the case number.</div>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Photo URL</label>
-          <input type="url" name="photo_url" class="form-input" placeholder="Link to a photo (imgur, Google Drive, etc.)">
-        </div>
-        <div class="form-field">
-          <label class="form-label">Your Relationship to This Person <span>*</span></label>
-          <select name="relationship" class="form-input" required>
-            <option value="">— Select —</option>
-            <option>Family Member</option>
-            <option>Friend</option>
-            <option>True Crime Researcher</option>
-            <option>Law Enforcement</option>
-            <option>Concerned Community Member</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Your Contact Email</label>
-          <input type="email" name="submitter_email" class="form-input" placeholder="For follow-up questions only — not published">
-          <div class="form-note">Your email will never be published. Used only if we need to verify information.</div>
-        </div>
-        <button type="submit" class="form-submit" id="form-submit-btn">Submit Case for Review</button>
-      </form>
-      <div id="form-success" style="display:none;" class="form-success">
-        <div class="form-success-icon">✅</div>
-        <div class="form-success-title">Case Submitted</div>
-        <div class="form-success-sub">Thank you. Your submission will be reviewed within 48 hours. If approved, the case will be added to the database and map. If you provided contact information we may reach out to verify details.</div>
-        <button onclick="closeForm()" style="margin-top:1.5rem;background:var(--blue);border:none;color:#fff;font-family:var(--sans);font-size:13px;font-weight:600;padding:10px 24px;cursor:pointer;border-radius:4px;">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+  {
+    id: "sm-027",
+    name: "Chandice Cochran",
+    age_missing: 28,
+    dob: "",
+    date_missing: "2019-08-20",
+    status: "active",
+    city: "Sutton",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Chandice Cochran was last seen in Sutton, Braxton County, WV on 2019-08-20. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 112999",
+    namus_url: "https://namus.nij.ojp.gov/case#/112999",
+    photo: ""
+  },
 
-<div class="share-toast" id="share-toast"></div>
+  {
+    id: "sm-028",
+    name: "Kyle Kincaid",
+    age_missing: 28,
+    dob: "",
+    date_missing: "2019-02-02",
+    status: "active",
+    city: "Huntington",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Kyle Kincaid was last seen in Huntington, Cabell County, WV on 2019-02-02. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 66397",
+    namus_url: "https://namus.nij.ojp.gov/case#/66397",
+    photo: ""
+  },
 
-<!-- PHOTO LIGHTBOX -->
-<div id="photo-lightbox" onclick="closePhotoLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:3000;align-items:center;justify-content:center;cursor:zoom-out;">
-  <img id="photo-lightbox-img" src="" style="max-width:92vw;max-height:92vh;object-fit:contain;">
-  <div style="position:absolute;top:1rem;right:1.5rem;color:rgba(255,255,255,0.5);font-size:11px;font-family:var(--mono);">CLICK ANYWHERE TO CLOSE</div>
-</div>
+  {
+    id: "sm-029",
+    name: "John Demarino",
+    age_missing: 51,
+    dob: "",
+    date_missing: "2019-01-30",
+    status: "active",
+    city: "Parkersburg",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "John Demarino was last seen in Parkersburg, Roane County, WV on 2019-01-30. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 58424",
+    namus_url: "https://namus.nij.ojp.gov/case#/58424",
+    photo: ""
+  },
 
-<!-- FLYER OVERLAY -->
-<div class="flyer-overlay" id="flyer-overlay">
-  <div class="flyer-container" id="flyer-container">
-    <div class="flyer-header-bar">
-      <span class="flyer-header-title">MISSING PERSON FLYER — STILLMISSING.US</span>
-      <div style="display:flex;gap:8px;">
-        <button class="flyer-print-btn" onclick="window.print()">🖨️ Print</button>
-        <button class="flyer-close" onclick="closeFlyer()">✕ Close</button>
-      </div>
-    </div>
-    <div class="flyer-content" id="flyer-content"></div>
-  </div>
-</div>
+  {
+    id: "sm-030",
+    name: "Christopher May",
+    age_missing: 41,
+    dob: "",
+    date_missing: "2019-01-02",
+    status: "active",
+    city: "Gilbert",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Christopher May was last seen in Gilbert, Mingo County, WV on 2019-01-02. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 77455",
+    namus_url: "https://namus.nij.ojp.gov/case#/77455",
+    photo: ""
+  },
 
-<!-- BOTTOM SECTIONS -->
-<div class="bottom-sections">
+  {
+    id: "sm-031",
+    name: "Andrew Jeffries",
+    age_missing: 34,
+    dob: "",
+    date_missing: "2018-08-20",
+    status: "active",
+    city: "Montrose",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Andrew Jeffries was last seen in Montrose, Randolph County, WV on 2018-08-20. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 55132",
+    namus_url: "https://namus.nij.ojp.gov/case#/55132",
+    photo: ""
+  },
 
-  <!-- STATS -->
-  <div class="stats-bar">
-    <div class="stat-block">
-      <div class="stat-block-num red" id="stat-active">0</div>
-      <div class="stat-block-label">Active Cases</div>
-    </div>
-    <div class="stat-block">
-      <div class="stat-block-num amber" id="stat-cold">0</div>
-      <div class="stat-block-label">Cold Cases</div>
-    </div>
-    <div class="stat-block">
-      <div class="stat-block-num blue" id="stat-states">0</div>
-      <div class="stat-block-label">WV Counties</div>
-    </div>
-    <div class="stat-block">
-      <div class="stat-block-num green" id="stat-found">0</div>
-      <div class="stat-block-label">Cases Resolved</div>
-    </div>
-  </div>
+  {
+    id: "sm-032",
+    name: "Breeanna Pugh",
+    age_missing: 26,
+    dob: "",
+    date_missing: "2018-04-12",
+    status: "cold",
+    city: "South Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Breeanna Pugh was last seen in South Charleston, Kanawha County, WV on 2018-04-12. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 50683",
+    namus_url: "https://namus.nij.ojp.gov/case#/50683",
+    photo: ""
+  },
 
-  <!-- MISSION + RESOURCES -->
-  <div class="mission-resources">
-    <div class="mission-section">
-      <div class="section-tag">// Our Mission //</div>
-      <div class="section-title">Built to Help Bring People Home</div>
-      <p class="section-text">StillMissing.us is a free, community-powered missing persons database focused on West Virginia, built and maintained by one person. It exists to give WV families a place to be heard, give researchers a tool to organize cases, and give communities a way to visualize where people are going missing in our state.</p>
-      <p class="section-text">West Virginia and Appalachia are historically underserved by national missing persons coverage. This site exists to change that locally. Every case is reviewed before publishing. Families may request removal at any time.</p>
-      <ul class="mission-points">
-        <li>All case information is submitted by the community and verified before publishing</li>
-        <li>If you have urgent information about a missing person, call 911 immediately</li>
-        <li>Families can submit, update, or request removal of any case at any time</li>
-        <li>Only publicly available information is displayed — no private data</li>
-        <li>The site is free to use and will always remain free</li>
-      </ul>
-    </div>
-    <div class="resources-section">
-      <div class="section-tag">// Official Resources //</div>
-      <div class="section-title">Find Help From Official Sources</div>
-      <p class="section-text">These official databases are the first place you should go for missing persons information. StillMissing.us does not pull from or integrate with these systems — we encourage you to cross-reference any case here with official sources.</p>
-      <a href="https://www.namus.gov" target="_blank" class="resource-link">
-        <span class="resource-icon">🏛️</span>
-        <div class="resource-info">
-          <div class="resource-name">NamUs — National Missing & Unidentified</div>
-          <div class="resource-desc">The official federal database for missing persons and unidentified remains</div>
-        </div>
-        <span class="resource-arrow">→</span>
-      </a>
-      <a href="https://www.ncmec.org" target="_blank" class="resource-link">
-        <span class="resource-icon">👶</span>
-        <div class="resource-info">
-          <div class="resource-name">NCMEC — National Center for Missing & Exploited Children</div>
-          <div class="resource-desc">The leading nonprofit for missing and exploited children in the US</div>
-        </div>
-        <span class="resource-arrow">→</span>
-      </a>
-      <a href="https://www.fbi.gov/wanted/kidnap" target="_blank" class="resource-link">
-        <span class="resource-icon">🔎</span>
-        <div class="resource-info">
-          <div class="resource-name">FBI Missing Persons</div>
-          <div class="resource-desc">FBI resources and database for missing persons cases</div>
-        </div>
-        <span class="resource-arrow">→</span>
-      </a>
-      <a href="https://www.missingkids.org/gethelpnow/isyourchildmissing" target="_blank" class="resource-link">
-        <span class="resource-icon">🚨</span>
-        <div class="resource-info">
-          <div class="resource-name">Is Your Child Missing? — NCMEC Hotline</div>
-          <div class="resource-desc">Call 1-800-THE-LOST (1-800-843-5678) — 24 hours a day</div>
-        </div>
-        <span class="resource-arrow">→</span>
-      </a>
-    </div>
-  </div>
+  {
+    id: "sm-033",
+    name: "Daniel Windley",
+    age_missing: 45,
+    dob: "",
+    date_missing: "2018-03-29",
+    status: "cold",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Daniel Windley was last seen in Charleston, Kanawha County, WV on 2018-03-29. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 51313",
+    namus_url: "https://namus.nij.ojp.gov/case#/51313",
+    photo: ""
+  },
 
-  <!-- FOOTER -->
-  <div class="site-footer">
-    <span>© 2026 STILLMISSING.US — WEST VIRGINIA MISSING PERSONS DATABASE</span>
-    <div class="footer-links">
-      <span style="color:var(--text3);font-size:10px;">If you have urgent information about a missing person — call 911</span>
-    </div>
-  </div>
+  {
+    id: "sm-034",
+    name: "Michael Johnson",
+    age_missing: 54,
+    dob: "",
+    date_missing: "2017-08-10",
+    status: "cold",
+    city: "Philippi",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Michael Johnson was last seen in Philippi, Barbour County, WV on 2017-08-10. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 54073",
+    namus_url: "https://namus.nij.ojp.gov/case#/54073",
+    photo: ""
+  },
 
-</div>
+  {
+    id: "sm-035",
+    name: "Ardie Curry",
+    age_missing: 74,
+    dob: "",
+    date_missing: "2017-04-14",
+    status: "cold",
+    city: "Glen White",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Ardie Curry was last seen in Glen White, Raleigh County, WV on 2017-04-14. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 38751",
+    namus_url: "https://namus.nij.ojp.gov/case#/38751",
+    photo: ""
+  },
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="cases.js"></script>
-<script>
-var activeFilter = 'all';
-var activeAgeFilter = 'all';
-var activeCounty = null;
-var searchQuery = '';
-var sortMode = 'newest';
+  {
+    id: "sm-036",
+    name: "Wanda Branham",
+    age_missing: 71,
+    dob: "",
+    date_missing: "2017-02-07",
+    status: "cold",
+    city: "Logan",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Wanda Branham was last seen in Logan, Logan County, WV on 2017-02-07. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 42113",
+    namus_url: "https://namus.nij.ojp.gov/case#/42113",
+    photo: ""
+  },
 
-// WV Counties
-var wvCounties = [
-  'Barbour','Berkeley','Boone','Braxton','Brooke','Cabell','Calhoun','Clay',
-  'Doddridge','Fayette','Gilmer','Grant','Greenbrier','Hampshire','Hancock',
-  'Hardy','Harrison','Jackson','Jefferson','Kanawha','Lewis','Lincoln','Logan',
-  'Marion','Marshall','Mason','McDowell','Mercer','Mineral','Mingo','Monongalia',
-  'Monroe','Morgan','Nicholas','Ohio','Pendleton','Pleasants','Pocahontas',
-  'Preston','Putnam','Raleigh','Randolph','Ritchie','Roane','Summers','Taylor',
-  'Tucker','Tyler','Upshur','Wayne','Webster','Wetzel','Wirt','Wood','Wyoming'
+  {
+    id: "sm-037",
+    name: "David Adkins",
+    age_missing: 30,
+    dob: "",
+    date_missing: "2016-06-07",
+    status: "cold",
+    city: "Whitesville",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "David Adkins was last seen in Whitesville, Boone County, WV on 2016-06-07. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 37607",
+    namus_url: "https://namus.nij.ojp.gov/case#/37607",
+    photo: ""
+  },
+
+  {
+    id: "sm-038",
+    name: "Starina Woods",
+    age_missing: 34,
+    dob: "",
+    date_missing: "2016-03-10",
+    status: "cold",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Starina Woods was last seen in Charleston, Kanawha County, WV on 2016-03-10. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 34589",
+    namus_url: "https://namus.nij.ojp.gov/case#/34589",
+    photo: ""
+  },
+
+  {
+    id: "sm-039",
+    name: "Marshall Priestley",
+    age_missing: 39,
+    dob: "",
+    date_missing: "2016-02-29",
+    status: "cold",
+    city: "Cross Lanes",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Marshall Priestley was last seen in Cross Lanes, Kanawha County, WV on 2016-02-29. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 34788",
+    namus_url: "https://namus.nij.ojp.gov/case#/34788",
+    photo: ""
+  },
+
+  {
+    id: "sm-040",
+    name: "Jennifer Killough",
+    age_missing: 33,
+    dob: "",
+    date_missing: "2015-11-05",
+    status: "cold",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Jennifer Killough was last seen in Charleston, Kanawha County, WV on 2015-11-05. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 50476",
+    namus_url: "https://namus.nij.ojp.gov/case#/50476",
+    photo: ""
+  },
+
+  {
+    id: "sm-041",
+    name: "Gerald Smith",
+    age_missing: 50,
+    dob: "",
+    date_missing: "2015-11-05",
+    status: "cold",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Gerald Smith was last seen in Charleston, Kanawha County, WV on 2015-11-05. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 50475",
+    namus_url: "https://namus.nij.ojp.gov/case#/50475",
+    photo: ""
+  },
+
+  {
+    id: "sm-042",
+    name: "Morten Aigeltinger",
+    age_missing: 56,
+    dob: "",
+    date_missing: "2015-09-08",
+    status: "cold",
+    city: "Charlestown",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Morten Aigeltinger was last seen in Charlestown, Jefferson County, WV on 2015-09-08. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 32734",
+    namus_url: "https://namus.nij.ojp.gov/case#/32734",
+    photo: ""
+  },
+
+  {
+    id: "sm-043",
+    name: "Dorothy Davis",
+    age_missing: 56,
+    dob: "",
+    date_missing: "2015-08-09",
+    status: "cold",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Dorothy Davis was last seen in Charleston, Kanawha County, WV on 2015-08-09. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 50470",
+    namus_url: "https://namus.nij.ojp.gov/case#/50470",
+    photo: ""
+  },
+
+  {
+    id: "sm-044",
+    name: "Brenda Mackey",
+    age_missing: 48,
+    dob: "",
+    date_missing: "2015-05-09",
+    status: "cold",
+    city: "Walker",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Brenda Mackey was last seen in Walker, Wood County, WV on 2015-05-09. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 36088",
+    namus_url: "https://namus.nij.ojp.gov/case#/36088",
+    photo: ""
+  },
+
+  {
+    id: "sm-045",
+    name: "Richard Arnold, Iii",
+    age_missing: 23,
+    dob: "",
+    date_missing: "2015-04-15",
+    status: "cold",
+    city: "Maxwellton",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Richard Arnold, Iii was last seen in Maxwellton, Greenbrier County, WV on 2015-04-15. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 42180",
+    namus_url: "https://namus.nij.ojp.gov/case#/42180",
+    photo: ""
+  },
+
+  {
+    id: "sm-046",
+    name: "Nicole Lockhart",
+    age_missing: 46,
+    dob: "",
+    date_missing: "2015-04-15",
+    status: "cold",
+    city: "Moundsville",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Nicole Lockhart was last seen in Moundsville, Marshall County, WV on 2015-04-15. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 42176",
+    namus_url: "https://namus.nij.ojp.gov/case#/42176",
+    photo: ""
+  },
+
+  {
+    id: "sm-047",
+    name: "Kenneth Hamm",
+    age_missing: 29,
+    dob: "",
+    date_missing: "2015-03-04",
+    status: "cold",
+    city: "Dunlow",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Kenneth Hamm was last seen in Dunlow, Wayne County, WV on 2015-03-04. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 35367",
+    namus_url: "https://namus.nij.ojp.gov/case#/35367",
+    photo: ""
+  },
+
+  {
+    id: "sm-048",
+    name: "Elbert Hall",
+    age_missing: 68,
+    dob: "",
+    date_missing: "2015-01-22",
+    status: "cold",
+    city: "South Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Elbert Hall was last seen in South Charleston, Kanawha County, WV on 2015-01-22. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 30410",
+    namus_url: "https://namus.nij.ojp.gov/case#/30410",
+    photo: ""
+  },
+
+  {
+    id: "sm-049",
+    name: "Daryl Smith",
+    age_missing: 46,
+    dob: "",
+    date_missing: "2014-10-02",
+    status: "cold",
+    city: "Dunbar",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Daryl Smith was last seen in Dunbar, Kanawha County, WV on 2014-10-02. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 26668",
+    namus_url: "https://namus.nij.ojp.gov/case#/26668",
+    photo: ""
+  },
+
+  {
+    id: "sm-050",
+    name: "William \"Nick\" Daniel",
+    age_missing: 36,
+    dob: "",
+    date_missing: "2014-07-22",
+    status: "cold",
+    city: "Beckley",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "William \"Nick\" Daniel was last seen in Beckley, Raleigh County, WV on 2014-07-22. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 26006",
+    namus_url: "https://namus.nij.ojp.gov/case#/26006",
+    photo: ""
+  },
+
+  {
+    id: "sm-051",
+    name: "Dee-Ann Keene",
+    age_missing: 43,
+    dob: "",
+    date_missing: "2014-02-28",
+    status: "cold",
+    city: "Renick",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Dee-Ann Keene was last seen in Renick, Greenbrier County, WV on 2014-02-28. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 26328",
+    namus_url: "https://namus.nij.ojp.gov/case#/26328",
+    photo: ""
+  },
+
+  {
+    id: "sm-052",
+    name: "Jeanna Mayle",
+    age_missing: 31,
+    dob: "",
+    date_missing: "2014-01-08",
+    status: "cold",
+    city: "Philippi",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Jeanna Mayle was last seen in Philippi, Barbour County, WV on 2014-01-08. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 42100",
+    namus_url: "https://namus.nij.ojp.gov/case#/42100",
+    photo: ""
+  },
+
+  {
+    id: "sm-053",
+    name: "Shane Deenis",
+    age_missing: 25,
+    dob: "",
+    date_missing: "2013-12-15",
+    status: "cold",
+    city: "Parkersburg",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Shane Deenis was last seen in Parkersburg, Wood County, WV on 2013-12-15. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 23348",
+    namus_url: "https://namus.nij.ojp.gov/case#/23348",
+    photo: ""
+  },
+
+  {
+    id: "sm-054",
+    name: "James Mathis",
+    age_missing: 38,
+    dob: "",
+    date_missing: "2013-12-13",
+    status: "cold",
+    city: "Huntington",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "James Mathis was last seen in Huntington, Cabell County, WV on 2013-12-13. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 23154",
+    namus_url: "https://namus.nij.ojp.gov/case#/23154",
+    photo: ""
+  },
+
+  {
+    id: "sm-055",
+    name: "Thomas Spangler",
+    age_missing: 60,
+    dob: "",
+    date_missing: "2013-01-01",
+    status: "cold",
+    city: "Peterstown",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Thomas Spangler was last seen in Peterstown, Monroe County, WV on 2013-01-01. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 41322",
+    namus_url: "https://namus.nij.ojp.gov/case#/41322",
+    photo: ""
+  },
+
+  {
+    id: "sm-056",
+    name: "Richard Ceglie",
+    age_missing: 45,
+    dob: "",
+    date_missing: "2012-12-10",
+    status: "cold",
+    city: "Follansbee",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Richard Ceglie was last seen in Follansbee, Brooke County, WV on 2012-12-10. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 50483",
+    namus_url: "https://namus.nij.ojp.gov/case#/50483",
+    photo: ""
+  },
+
+  {
+    id: "sm-057",
+    name: "Harold Pack",
+    age_missing: 50,
+    dob: "",
+    date_missing: "2012-11-20",
+    status: "cold",
+    city: "Chapmanville",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Harold Pack was last seen in Chapmanville, Logan County, WV on 2012-11-20. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 41317",
+    namus_url: "https://namus.nij.ojp.gov/case#/41317",
+    photo: ""
+  },
+
+  {
+    id: "sm-058",
+    name: "Darlene Fleshman",
+    age_missing: 42,
+    dob: "",
+    date_missing: "2012-09-15",
+    status: "cold",
+    city: "Union",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Darlene Fleshman was last seen in Union, Monroe County, WV on 2012-09-15. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 41316",
+    namus_url: "https://namus.nij.ojp.gov/case#/41316",
+    photo: ""
+  },
+
+  {
+    id: "sm-059",
+    name: "Erica Enicks",
+    age_missing: 26,
+    dob: "",
+    date_missing: "2012-07-21",
+    status: "cold",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Erica Enicks was last seen in Charleston, Kanawha County, WV on 2012-07-21. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 50460",
+    namus_url: "https://namus.nij.ojp.gov/case#/50460",
+    photo: ""
+  },
+
+  {
+    id: "sm-060",
+    name: "Luke Stout",
+    age_missing: 24,
+    dob: "",
+    date_missing: "2012-07-18",
+    status: "cold",
+    city: "Buckhannon",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Luke Stout was last seen in Buckhannon, Upshur County, WV on 2012-07-18. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 16962",
+    namus_url: "https://namus.nij.ojp.gov/case#/16962",
+    photo: ""
+  },
+
+  {
+    id: "sm-061",
+    name: "Deborah Hunter",
+    age_missing: 44,
+    dob: "",
+    date_missing: "2012-07-02",
+    status: "cold",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Deborah Hunter was last seen in Charleston, Kanawha County, WV on 2012-07-02. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 34789",
+    namus_url: "https://namus.nij.ojp.gov/case#/34789",
+    photo: ""
+  },
+
+  {
+    id: "sm-062",
+    name: "Jerry Holcomb",
+    age_missing: 62,
+    dob: "",
+    date_missing: "2012-06-17",
+    status: "cold",
+    city: "Ivydale",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Jerry Holcomb was last seen in Ivydale, Clay County, WV on 2012-06-17. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 41314",
+    namus_url: "https://namus.nij.ojp.gov/case#/41314",
+    photo: ""
+  },
+
+  {
+    id: "sm-063",
+    name: "Walter Edmunds",
+    age_missing: 79,
+    dob: "",
+    date_missing: "2011-12-11",
+    status: "cold",
+    city: "Chapmanville",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Walter Edmunds was last seen in Chapmanville, Logan County, WV on 2011-12-11. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 41256",
+    namus_url: "https://namus.nij.ojp.gov/case#/41256",
+    photo: ""
+  },
+
+  {
+    id: "sm-064",
+    name: "Barbara Thomason",
+    age_missing: 63,
+    dob: "",
+    date_missing: "2011-09-26",
+    status: "cold",
+    city: "Princeton",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Barbara Thomason was last seen in Princeton, Mercer County, WV on 2011-09-26. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 37527",
+    namus_url: "https://namus.nij.ojp.gov/case#/37527",
+    photo: ""
+  },
+
+  {
+    id: "sm-065",
+    name: "Aliayah Lunsford",
+    age_missing: 3,
+    dob: "",
+    date_missing: "2011-09-24",
+    status: "active",
+    city: "Weston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Aliayah Lunsford was last seen in Weston, Lewis County, WV on 2011-09-24. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 12461",
+    namus_url: "https://namus.nij.ojp.gov/case#/12461",
+    photo: ""
+  },
+
+  {
+    id: "sm-066",
+    name: "Sherry Myers",
+    age_missing: 34,
+    dob: "",
+    date_missing: "2011-08-11",
+    status: "cold",
+    city: "Oceana",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Sherry Myers was last seen in Oceana, Wyoming County, WV on 2011-08-11. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 30606",
+    namus_url: "https://namus.nij.ojp.gov/case#/30606",
+    photo: ""
+  },
+
+  {
+    id: "sm-067",
+    name: "Brian Cook",
+    age_missing: 37,
+    dob: "",
+    date_missing: "2011-07-28",
+    status: "cold",
+    city: "Oceana",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Brian Cook was last seen in Oceana, Wyoming County, WV on 2011-07-28. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 30507",
+    namus_url: "https://namus.nij.ojp.gov/case#/30507",
+    photo: ""
+  },
+
+  {
+    id: "sm-068",
+    name: "William Crawford",
+    age_missing: 28,
+    dob: "",
+    date_missing: "2011-06-16",
+    status: "cold",
+    city: "Southside",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "William Crawford was last seen in Southside, Mason County, WV on 2011-06-16. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 11527",
+    namus_url: "https://namus.nij.ojp.gov/case#/11527",
+    photo: ""
+  },
+
+  {
+    id: "sm-069",
+    name: "Earnest Francis",
+    age_missing: 32,
+    dob: "",
+    date_missing: "2011-05-04",
+    status: "cold",
+    city: "Sistersville",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Earnest Francis was last seen in Sistersville, Tyler County, WV on 2011-05-04. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 11021",
+    namus_url: "https://namus.nij.ojp.gov/case#/11021",
+    photo: ""
+  },
+
+  {
+    id: "sm-070",
+    name: "Mary Olshefski-Beatty",
+    age_missing: 56,
+    dob: "",
+    date_missing: "2011-03-04",
+    status: "cold",
+    city: "Gerrardstown",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Mary Olshefski-Beatty was last seen in Gerrardstown, Berkeley County, WV on 2011-03-04. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 29650",
+    namus_url: "https://namus.nij.ojp.gov/case#/29650",
+    photo: ""
+  },
+
+  {
+    id: "sm-071",
+    name: "Samuel Riser",
+    age_missing: 60,
+    dob: "",
+    date_missing: "2010-12-08",
+    status: "cold",
+    city: "Glasgow",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Samuel Riser was last seen in Glasgow, Kanawha County, WV on 2010-12-08. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 9527",
+    namus_url: "https://namus.nij.ojp.gov/case#/9527",
+    photo: ""
+  },
+
+  {
+    id: "sm-072",
+    name: "Willie Williams",
+    age_missing: 18,
+    dob: "",
+    date_missing: "2010-10-01",
+    status: "cold",
+    city: "Chapmanville",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Willie Williams was last seen in Chapmanville, Logan County, WV on 2010-10-01. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 41231",
+    namus_url: "https://namus.nij.ojp.gov/case#/41231",
+    photo: ""
+  },
+
+  {
+    id: "sm-073",
+    name: "Robert Shaffer",
+    age_missing: 24,
+    dob: "",
+    date_missing: "2010-07-01",
+    status: "cold",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Robert Shaffer was last seen in Charleston, Kanawha County, WV on 2010-07-01. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 19287",
+    namus_url: "https://namus.nij.ojp.gov/case#/19287",
+    photo: ""
+  },
+
+  {
+    id: "sm-074",
+    name: "Grover Vance",
+    age_missing: 75,
+    dob: "",
+    date_missing: "2010-03-27",
+    status: "cold",
+    city: "Huntington",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Grover Vance was last seen in Huntington, Cabell County, WV on 2010-03-27. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 41224",
+    namus_url: "https://namus.nij.ojp.gov/case#/41224",
+    photo: ""
+  },
+
+  {
+    id: "sm-075",
+    name: "Charlene Hollenback Johnson Satterfield",
+    age_missing: 35,
+    dob: "",
+    date_missing: "2010-03-15",
+    status: "cold",
+    city: "Morgantown",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Charlene Hollenback Johnson Satterfield was last seen in Morgantown, Monongalia County, WV on 2010-03-15. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 80008",
+    namus_url: "https://namus.nij.ojp.gov/case#/80008",
+    photo: ""
+  },
+
+  {
+    id: "sm-076",
+    name: "Edward Bartram",
+    age_missing: 23,
+    dob: "",
+    date_missing: "2009-05-19",
+    status: "cold",
+    city: "Mineral City",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Edward Bartram was last seen in Mineral City, Logan County, WV on 2009-05-19. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 33060",
+    namus_url: "https://namus.nij.ojp.gov/case#/33060",
+    photo: ""
+  },
+
+  {
+    id: "sm-077",
+    name: "James Horne",
+    age_missing: 55,
+    dob: "",
+    date_missing: "2009-02-05",
+    status: "cold",
+    city: "Princeton",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "James Horne was last seen in Princeton, Mercer County, WV on 2009-02-05. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 40842",
+    namus_url: "https://namus.nij.ojp.gov/case#/40842",
+    photo: ""
+  },
+
+  {
+    id: "sm-078",
+    name: "Kimberly Jones",
+    age_missing: 25,
+    dob: "",
+    date_missing: "2009-02-03",
+    status: "cold",
+    city: "Parkersburg",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Kimberly Jones was last seen in Parkersburg, Wood County, WV on 2009-02-03. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 6892",
+    namus_url: "https://namus.nij.ojp.gov/case#/6892",
+    photo: ""
+  },
+
+  {
+    id: "sm-079",
+    name: "Franklin Jones",
+    age_missing: 65,
+    dob: "",
+    date_missing: "2009-01-07",
+    status: "cold",
+    city: "Point Pleasant",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Franklin Jones was last seen in Point Pleasant, Mason County, WV on 2009-01-07. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 40841",
+    namus_url: "https://namus.nij.ojp.gov/case#/40841",
+    photo: ""
+  },
+
+  {
+    id: "sm-080",
+    name: "Billy Hayes",
+    age_missing: 53,
+    dob: "",
+    date_missing: "2008-05-15",
+    status: "cold",
+    city: "Huntington",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Billy Hayes was last seen in Huntington, Cabell County, WV on 2008-05-15. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 40839",
+    namus_url: "https://namus.nij.ojp.gov/case#/40839",
+    photo: ""
+  },
+
+  {
+    id: "sm-081",
+    name: "Timothy Dalton",
+    age_missing: 25,
+    dob: "",
+    date_missing: "2007-03-26",
+    status: "cold",
+    city: "Peterstown",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Timothy Dalton was last seen in Peterstown, Monroe County, WV on 2007-03-26. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 12948",
+    namus_url: "https://namus.nij.ojp.gov/case#/12948",
+    photo: ""
+  },
+
+  {
+    id: "sm-082",
+    name: "Jeremy Van Meter",
+    age_missing: 26,
+    dob: "",
+    date_missing: "2006-09-01",
+    status: "cold",
+    city: "Mason",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Jeremy Van Meter was last seen in Mason, Mason County, WV on 2006-09-01. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 17339",
+    namus_url: "https://namus.nij.ojp.gov/case#/17339",
+    photo: ""
+  },
+
+  {
+    id: "sm-083",
+    name: "Melanie Metheny",
+    age_missing: 21,
+    dob: "",
+    date_missing: "2006-07-19",
+    status: "cold",
+    city: "Belle",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Melanie Metheny was last seen in Belle, Kanawha County, WV on 2006-07-19. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 418",
+    namus_url: "https://namus.nij.ojp.gov/case#/418",
+    photo: ""
+  },
+
+  {
+    id: "sm-084",
+    name: "Robert Spessert",
+    age_missing: 64,
+    dob: "",
+    date_missing: "2006-05-08",
+    status: "cold",
+    city: "Kingwood",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Robert Spessert was last seen in Kingwood, Preston County, WV on 2006-05-08. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 40806",
+    namus_url: "https://namus.nij.ojp.gov/case#/40806",
+    photo: ""
+  },
+
+  {
+    id: "sm-085",
+    name: "Hevin Jenkins",
+    age_missing: 2,
+    dob: "",
+    date_missing: "2005-12-26",
+    status: "active",
+    city: "Salt Rock",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Hevin Jenkins was last seen in Salt Rock, Cabell County, WV on 2005-12-26. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 6225",
+    namus_url: "https://namus.nij.ojp.gov/case#/6225",
+    photo: ""
+  },
+
+  {
+    id: "sm-086",
+    name: "Jeffrey Ruggles",
+    age_missing: 28,
+    dob: "",
+    date_missing: "2005-11-26",
+    status: "cold",
+    city: "Huntington",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Jeffrey Ruggles was last seen in Huntington, Cabell County, WV on 2005-11-26. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 22936",
+    namus_url: "https://namus.nij.ojp.gov/case#/22936",
+    photo: ""
+  },
+
+  {
+    id: "sm-087",
+    name: "Faith Willis",
+    age_missing: 21,
+    dob: "",
+    date_missing: "2005-08-06",
+    status: "cold",
+    city: "Fairmont",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Faith Willis was last seen in Fairmont, Marion County, WV on 2005-08-06. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 420",
+    namus_url: "https://namus.nij.ojp.gov/case#/420",
+    photo: ""
+  },
+
+  {
+    id: "sm-088",
+    name: "Nicholas Shinn",
+    age_missing: 18,
+    dob: "",
+    date_missing: "2003-06-15",
+    status: "cold",
+    city: "Ripley",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Nicholas Shinn was last seen in Ripley, Jackson County, WV on 2003-06-15. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 55847",
+    namus_url: "https://namus.nij.ojp.gov/case#/55847",
+    photo: ""
+  },
+
+  {
+    id: "sm-089",
+    name: "Frank Angle",
+    age_missing: 68,
+    dob: "",
+    date_missing: "2002-11-16",
+    status: "cold",
+    city: "Brenton",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Frank Angle was last seen in Brenton, Wyoming County, WV on 2002-11-16. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 33059",
+    namus_url: "https://namus.nij.ojp.gov/case#/33059",
+    photo: ""
+  },
+
+  {
+    id: "sm-090",
+    name: "Samantha Burns",
+    age_missing: 19,
+    dob: "",
+    date_missing: "2002-11-11",
+    status: "cold",
+    city: "Huntington",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Samantha Burns was last seen in Huntington, Cabell County, WV on 2002-11-11. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 411",
+    namus_url: "https://namus.nij.ojp.gov/case#/411",
+    photo: ""
+  },
+
+  {
+    id: "sm-091",
+    name: "Nancy Green",
+    age_missing: 45,
+    dob: "",
+    date_missing: "2002-09-30",
+    status: "cold",
+    city: "Wheeling",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Nancy Green was last seen in Wheeling, Ohio County, WV on 2002-09-30. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 414",
+    namus_url: "https://namus.nij.ojp.gov/case#/414",
+    photo: ""
+  },
+
+  {
+    id: "sm-092",
+    name: "Katha Holton",
+    age_missing: 44,
+    dob: "",
+    date_missing: "2002-08-02",
+    status: "cold",
+    city: "Huntington",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Katha Holton was last seen in Huntington, Cabell County, WV on 2002-08-02. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 34085",
+    namus_url: "https://namus.nij.ojp.gov/case#/34085",
+    photo: ""
+  },
+
+  {
+    id: "sm-093",
+    name: "Janet Baker",
+    age_missing: 38,
+    dob: "",
+    date_missing: "2000-03-18",
+    status: "cold",
+    city: "Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Janet Baker was last seen in Charleston, Kanawha County, WV on 2000-03-18. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 35107",
+    namus_url: "https://namus.nij.ojp.gov/case#/35107",
+    photo: ""
+  },
+
+  {
+    id: "sm-094",
+    name: "Mary Friend",
+    age_missing: 45,
+    dob: "",
+    date_missing: "1999-12-01",
+    status: "cold",
+    city: "Gore",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Mary Friend was last seen in Gore, Lewis County, WV on 1999-12-01. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 413",
+    namus_url: "https://namus.nij.ojp.gov/case#/413",
+    photo: ""
+  },
+
+  {
+    id: "sm-095",
+    name: "Marcus Stalnaker",
+    age_missing: 69,
+    dob: "",
+    date_missing: "1999-12-01",
+    status: "cold",
+    city: "Gore",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Marcus Stalnaker was last seen in Gore, Lewis County, WV on 1999-12-01. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 419",
+    namus_url: "https://namus.nij.ojp.gov/case#/419",
+    photo: ""
+  },
+
+  {
+    id: "sm-096",
+    name: "Melody Anderson",
+    age_missing: 54,
+    dob: "",
+    date_missing: "1999-10-01",
+    status: "cold",
+    city: "Wellsburg",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Melody Anderson was last seen in Wellsburg, Brooke County, WV on 1999-10-01. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 37852",
+    namus_url: "https://namus.nij.ojp.gov/case#/37852",
+    photo: ""
+  },
+
+  {
+    id: "sm-097",
+    name: "Jason Adkins",
+    age_missing: 23,
+    dob: "",
+    date_missing: "1999-01-17",
+    status: "cold",
+    city: "Huntington",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Jason Adkins was last seen in Huntington, Cabell County, WV on 1999-01-17. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 1247",
+    namus_url: "https://namus.nij.ojp.gov/case#/1247",
+    photo: ""
+  },
+
+  {
+    id: "sm-098",
+    name: "Lisa Crouse",
+    age_missing: 24,
+    dob: "",
+    date_missing: "1997-11-04",
+    status: "cold",
+    city: "Romney",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Female. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Lisa Crouse was last seen in Romney, Hampshire County, WV on 1997-11-04. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 13243",
+    namus_url: "https://namus.nij.ojp.gov/case#/13243",
+    photo: ""
+  },
+
+  {
+    id: "sm-099",
+    name: "Lonnie Eplin",
+    age_missing: 35,
+    dob: "",
+    date_missing: "1997-02-08",
+    status: "cold",
+    city: "Hamlin",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Lonnie Eplin was last seen in Hamlin, Lincoln County, WV on 1997-02-08. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 40805",
+    namus_url: "https://namus.nij.ojp.gov/case#/40805",
+    photo: ""
+  },
+
+  {
+    id: "sm-100",
+    name: "Kenneth Parsons",
+    age_missing: 20,
+    dob: "",
+    date_missing: "1997-01-22",
+    status: "cold",
+    city: "Ravenswood",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Kenneth Parsons was last seen in Ravenswood, Jackson County, WV on 1997-01-22. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 2363",
+    namus_url: "https://namus.nij.ojp.gov/case#/2363",
+    photo: ""
+  },
+
+  {
+    id: "sm-101",
+    name: "Carl Barksdale, Jr.",
+    age_missing: 62,
+    dob: "",
+    date_missing: "1994-09-05",
+    status: "cold",
+    city: "Clendenin",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Carl Barksdale, Jr. was last seen in Clendenin, Roane County, WV on 1994-09-05. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 410",
+    namus_url: "https://namus.nij.ojp.gov/case#/410",
+    photo: ""
+  },
+
+  {
+    id: "sm-102",
+    name: "Victor Shoemaker",
+    age_missing: 5,
+    dob: "",
+    date_missing: "1994-05-01",
+    status: "active",
+    city: "Kirby",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: White / Caucasian.",
+    circumstances: "Victor Shoemaker was last seen in Kirby, Hampshire County, WV on 1994-05-01. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 6652",
+    namus_url: "https://namus.nij.ojp.gov/case#/6652",
+    photo: ""
+  },
+
+  {
+    id: "sm-103",
+    name: "Gary Burkes",
+    age_missing: 30,
+    dob: "",
+    date_missing: "1994-02-07",
+    status: "cold",
+    city: "South Charleston",
+    state: "WV",
+    height: "",
+    weight: "",
+    hair: "",
+    eyes: "",
+    distinguishing: "Sex: Male. Race/Ethnicity: Black / African American.",
+    circumstances: "Gary Burkes was last seen in South Charleston, Kanawha County, WV on 1994-02-07. This case is listed on the National Missing and Unidentified Persons System (NamUs). For more details visit the NamUs case page.",
+    case_number: "NamUs 40654",
+    namus_url: "https://namus.nij.ojp.gov/case#/40654",
+    photo: ""
+  },
 ];
-
-// Clock
-function updateClock() {
-  var el = document.getElementById('alert-time');
-  if (el) el.textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-}
-setInterval(updateClock, 60000);
-updateClock();
-
-// Stats
-function updateStats() {
-  var list = cases;
-  document.getElementById('total-cases').textContent = list.length;
-  document.getElementById('active-cases').textContent = list.filter(function(c){ return c.status === 'active' || c.status === 'endangered'; }).length;
-  var counties = new Set(list.map(function(c){ return c.city; }));
-  document.getElementById('states-count').textContent = counties.size;
-  document.getElementById('feed-count').textContent = getFiltered().length + ' cases';
-}
-
-// Alert ticker
-function buildTicker() {
-  var active = cases.filter(function(c){ return c.status === 'active' || c.status === 'endangered'; });
-  var text = active.map(function(c){
-    return 'MISSING: ' + c.name + ' — ' + c.city + ', ' + c.state + ' — Last seen ' + new Date(c.date_missing).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  }).join(' &nbsp;•&nbsp; ') + ' &nbsp;•&nbsp; ';
-  var doubled = text + text;
-  document.getElementById('alert-text').innerHTML = doubled;
-  document.getElementById('alert-text2').innerHTML = doubled;
-}
-
-// Filter
-function getFiltered() {
-  var list = cases;
-  if (activeFilter === 'active') list = list.filter(function(c){ return c.status === 'active'; });
-  else if (activeFilter === 'endangered') list = list.filter(function(c){ return c.status === 'endangered'; });
-  else if (activeFilter === 'cold') list = list.filter(function(c){ return c.status === 'cold'; });
-  else if (activeFilter === 'found-safe') list = list.filter(function(c){ return c.status === 'found-safe'; });
-  else if (activeFilter === 'found-deceased') list = list.filter(function(c){ return c.status === 'found-deceased'; });
-  if (activeAgeFilter === 'child') list = list.filter(function(c){ return c.age_missing <= 17; });
-  else if (activeAgeFilter === 'adult') list = list.filter(function(c){ return c.age_missing >= 18; });
-  if (activeCounty) list = list.filter(function(c){ return (cityToCounty[c.city]||c.city) === activeCounty; });
-  if (searchQuery) {
-    var q = searchQuery.toLowerCase();
-    list = list.filter(function(c){
-      return c.name.toLowerCase().includes(q)
-        || c.city.toLowerCase().includes(q)
-        || c.state.toLowerCase().includes(q)
-        || (c.case_number && c.case_number.toLowerCase().includes(q))
-        || (c.circumstances && c.circumstances.toLowerCase().includes(q));
-    });
-  }
-  list = list.slice().sort(function(a,b){
-    if (sortMode === 'oldest') return new Date(a.date_missing) - new Date(b.date_missing);
-    if (sortMode === 'name') return a.name.localeCompare(b.name);
-    if (sortMode === 'state') return a.state.localeCompare(b.state);
-    return new Date(b.date_missing) - new Date(a.date_missing);
-  });
-  return list;
-}
-
-// Filter buttons
-document.querySelectorAll('.fbtn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var type = this.getAttribute('data-type');
-    var filter = this.getAttribute('data-filter');
-    if (type === 'status') {
-      activeFilter = filter;
-      document.querySelectorAll('.fbtn[data-type="status"]').forEach(function(b){ b.classList.remove('active'); });
-    } else {
-      activeAgeFilter = filter;
-      document.querySelectorAll('.fbtn[data-type="age"]').forEach(function(b){ b.classList.remove('active'); });
-    }
-    this.classList.add('active');
-    updateHeatmap();
-    renderFeed();
-  });
-});
-
-document.getElementById('sort-select').addEventListener('change', function(){ sortMode = this.value; renderFeed(); });
-document.getElementById('main-search').addEventListener('input', function(){ searchQuery = this.value; renderFeed(); });
-document.getElementById('feed-search').addEventListener('input', function(){ searchQuery = this.value; renderFeed(); });
-
-// Map
-function initMap() {
-  var w = 960, h = 660;
-  var svg = d3.select('#map-container').append('svg')
-    .attr('viewBox','0 0 ' + w + ' ' + h)
-    .attr('preserveAspectRatio','xMidYMid meet')
-    .style('width','100%').style('height','100%').style('display','block');
-  svg.append('rect').attr('width',w).attr('height',h).attr('fill','#0a0e1a');
-
-  var projection = d3.geoMercator();
-  var path = d3.geoPath().projection(projection);
-  var tooltip = document.getElementById('state-tooltip');
-
-  fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json')
-    .then(function(r){ return r.json(); })
-    .then(function(us) {
-      var allCounties = topojson.feature(us, us.objects.counties);
-
-      // Filter WV counties — FIPS 54xxx
-      var wvFeatures = allCounties.features.filter(function(d){
-        return Math.floor(d.id / 1000) === 54;
-      });
-
-      if (!wvFeatures.length) { console.error('No WV counties found'); return; }
-
-      // Auto-fit projection to WV with padding
-      var wvCollection = { type:'FeatureCollection', features: wvFeatures };
-      projection.fitExtent([[40, 40],[w-40, h-40]], wvCollection);
-
-      // Background rect for WV
-      svg.append('path')
-        .datum(wvCollection)
-        .attr('d', path)
-        .attr('fill', '#0a0f1e')
-        .attr('stroke', 'none');
-
-      // Draw counties
-      svg.selectAll('.county').data(wvFeatures).enter().append('path')
-        .attr('class','county')
-        .attr('d', path)
-        .attr('fill', '#0d1525')
-        .attr('stroke', '#1a2540')
-        .attr('stroke-width', 0.8)
-        .on('mousemove', function(event, d) {
-          var name = wvCountyNames[String(d.id)] || 'Unknown';
-          var counts = getCaseCounts();
-          var count = counts[name] || 0;
-          var mapSection = document.querySelector('.map-section');
-          var rect = mapSection.getBoundingClientRect();
-          tooltip.style.display = 'block';
-          tooltip.style.left = (event.clientX - rect.left + 14) + 'px';
-          tooltip.style.top = (event.clientY - rect.top - 10) + 'px';
-          tooltip.innerHTML = '<strong>' + name + ' County</strong> &nbsp;—&nbsp; '
-            + (count > 0 ? '<span style="color:var(--red)">' + count + ' case' + (count!==1?'s':'') + '</span>' : '<span style="color:var(--text3)">No cases</span>');
-        })
-        .on('mouseleave', function(){ tooltip.style.display = 'none'; })
-        .on('click', function(event, d) {
-          var name = wvCountyNames[String(d.id)] || null;
-          if (!name) return;
-          if (activeCounty === name) { clearCountyFilter(); return; }
-          activeCounty = name;
-          updateHeatmap();
-          renderFeed();
-          document.getElementById('feed-list').scrollTop = 0;
-          var counts = getCaseCounts();
-          var count = counts[name] || 0;
-          var banner = document.getElementById('state-banner');
-          banner.style.display = 'block';
-          banner.textContent = '📍 ' + name + ' County — ' + count + ' case' + (count!==1?'s':'') + ' — Click to clear';
-        });
-
-      // County borders
-      svg.append('path')
-        .datum(topojson.mesh(us, us.objects.counties, function(a,b){
-          return a !== b && Math.floor(a.id/1000) === 54 && Math.floor(b.id/1000) === 54;
-        }))
-        .attr('fill','none').attr('stroke','#1e2d4a').attr('stroke-width', 0.6).attr('d', path);
-
-      // WV outer border
-      svg.append('path')
-        .datum(topojson.merge(us, us.objects.counties.geometries.filter(function(d){
-          return Math.floor(d.id/1000) === 54;
-        })))
-        .attr('fill','none').attr('stroke','#3a5a9a').attr('stroke-width', 2).attr('d', path);
-
-      updateHeatmap();
-    })
-    .catch(function(err){ console.error('Map load error:', err); });
-}
-
-// WV county FIPS to name mapping
-var wvCountyNames = {
-  '54001':'Barbour','54003':'Berkeley','54005':'Boone','54007':'Braxton',
-  '54009':'Brooke','54011':'Cabell','54013':'Calhoun','54015':'Clay',
-  '54017':'Doddridge','54019':'Fayette','54021':'Gilmer','54023':'Grant',
-  '54025':'Greenbrier','54027':'Hampshire','54029':'Hancock','54031':'Hardy',
-  '54033':'Harrison','54035':'Jackson','54037':'Jefferson','54039':'Kanawha',
-  '54041':'Lewis','54043':'Lincoln','54045':'Logan','54047':'Marion',
-  '54049':'Marshall','54051':'Mason','54053':'McDowell','54055':'Mercer',
-  '54057':'Mineral','54059':'Mingo','54061':'Monongalia','54063':'Monroe',
-  '54065':'Morgan','54067':'Nicholas','54069':'Ohio','54071':'Pendleton',
-  '54073':'Pleasants','54075':'Pocahontas','54077':'Preston','54079':'Putnam',
-  '54081':'Raleigh','54083':'Randolph','54085':'Ritchie','54087':'Roane',
-  '54089':'Summers','54091':'Taylor','54093':'Tucker','54095':'Tyler',
-  '54097':'Upshur','54099':'Wayne','54101':'Webster','54103':'Wetzel',
-  '54105':'Wirt','54107':'Wood','54109':'Wyoming'
-};
-
-function getCaseCounts() {
-  var counts = {};
-  var list = activeFilter === 'all' ? cases : getFiltered();
-  list.filter(function(c){ return c.status !== 'found-safe' && c.status !== 'found-deceased'; })
-    .forEach(function(c){
-      // Match city to county name
-      var county = cityToCounty[c.city] || c.city;
-      counts[county] = (counts[county]||0) + 1;
-    });
-  return counts;
-}
-
-// City to county lookup for WV — add more as cases come in
-var cityToCounty = {
-  'Charleston':'Kanawha','South Charleston':'Kanawha','Dunbar':'Kanawha',
-  'St. Albans':'Kanawha','Big Chimney':'Kanawha','Nitro':'Kanawha',
-  'Huntington':'Cabell','Barboursville':'Cabell','Milton':'Cabell',
-  'Morgantown':'Monongalia','Star City':'Monongalia',
-  'Parkersburg':'Wood','Vienna':'Wood','Williamstown':'Wood',
-  'Wheeling':'Ohio','Weirton':'Hancock','Chester':'Hancock',
-  'Martinsburg':'Berkeley','Shepherdstown':'Jefferson','Charles Town':'Jefferson',
-  'Clarksburg':'Harrison','Bridgeport':'Harrison','Shinnston':'Harrison',
-  'Fairmont':'Marion','Mannington':'Marion',
-  'Beckley':'Raleigh','Lewisburg':'Greenbrier','Bluefield':'Mercer',
-  'Point Pleasant':'Mason','Logan':'Logan','Williamson':'Mingo',
-  'Elkins':'Randolph','Buckhannon':'Upshur','Weston':'Lewis',
-  'Calvin':'Nicholas','Richwood':'Nicholas','Craigsville':'Nicholas',
-  'Moorefield':'Hardy','Petersburg':'Grant','Romney':'Hampshire',
-  'Keyser':'Mineral','Philippi':'Barbour','Spencer':'Roane',
-  'Glenville':'Gilmer','Sutton':'Braxton','Summersville':'Nicholas',
-  'Ripley':'Jackson','Ravenswood':'Jackson','Grantsville':'Calhoun',
-  'Welch':'McDowell','Princeton':'Mercer','Hinton':'Summers',
-  'Marlinton':'Pocahontas','Harrisville':'Ritchie','Elizabeth':'Wirt',
-  'New Martinsville':'Wetzel','Sistersville':'Tyler','Middlebourne':'Tyler',
-  'Kingwood':'Preston','Terra Alta':'Preston','Grafton':'Taylor',
-  'Parsons':'Tucker','Paw Paw':'Morgan','Berkeley Springs':'Morgan'
-};
-
-function updateHeatmap() {
-  var counts = getCaseCounts();
-  var max = Math.max(1, d3.max(Object.values(counts)) || 1);
-  d3.selectAll('.county').attr('fill', function(d) {
-    var name = wvCountyNames[String(d.id)];
-    var count = counts[name] || 0;
-    var isSelected = activeCounty && activeCounty === name;
-    if (isSelected) return 'rgba(245,158,11,0.3)';
-    if (count === 0) return '#0d1525';
-    var intensity = count / max;
-    if (intensity < 0.33) return 'rgba(239,68,68,0.35)';
-    if (intensity < 0.66) return 'rgba(239,68,68,0.60)';
-    return 'rgba(239,68,68,0.88)';
-  }).attr('stroke', function(d) {
-    var name = wvCountyNames[String(d.id)];
-    return (activeCounty && activeCounty === name) ? 'rgba(245,158,11,0.9)' : '#1a2540';
-  }).attr('stroke-width', function(d) {
-    var name = wvCountyNames[String(d.id)];
-    return (activeCounty && activeCounty === name) ? 2 : 0.8;
-  });
-}
-
-function clearCountyFilter() {
-  activeCounty = null;
-  document.getElementById('state-banner').style.display = 'none';
-  updateHeatmap();
-  renderFeed();
-}
-
-
-// Feed
-function renderFeed() {
-  var list = getFiltered();
-  document.getElementById('feed-count').textContent = list.length + ' case' + (list.length !== 1 ? 's' : '');
-  var titleEl = document.getElementById('feed-title');
-  titleEl.textContent = activeCounty ? activeCounty + ' County Cases' : 'Case Feed';
-
-  var el = document.getElementById('feed-list');
-  if (!list.length) {
-    el.innerHTML = '<div class="feed-empty"><div class="feed-empty-icon">🔍</div>'
-      + (searchQuery ? 'No cases match "' + searchQuery + '"' : activeCounty ? 'No cases in ' + activeCounty + ' County yet.<br><br>Know of a missing person from this area?<br><button onclick="openForm()" style="margin-top:0.75rem;background:var(--blue);border:none;color:#fff;font-family:var(--sans);font-size:12px;font-weight:600;padding:8px 18px;cursor:pointer;border-radius:4px;">Submit a Case</button>' : 'No cases match the current filter.')
-      + '</div>';
-    return;
-  }
-
-  var statusLabels = { active: 'ACTIVE', endangered: 'ENDANGERED', cold: 'COLD CASE', 'found-safe': '✅ FOUND SAFE', 'found-deceased': '🕊️ FOUND — DECEASED' };
-  el.innerHTML = list.map(function(c) {
-    var d = new Date(c.date_missing);
-    var dateStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    var yearsAgo = new Date().getFullYear() - d.getFullYear();
-    return '<div class="case-card" onclick="openCase(\'' + c.id + '\')">'
-      + (c.photo ? '<img class="case-photo" src="' + c.photo + '" alt="' + c.name + '">' : '<div class="case-photo-placeholder">👤</div>')
-      + '<div class="case-info">'
-      + '<div class="case-top">'
-      + '<div class="case-name">' + c.name + '</div>'
-      + '<span class="case-status ' + c.status + '">' + (statusLabels[c.status]||c.status.toUpperCase()) + '</span>'
-      + '</div>'
-      + '<div class="case-meta">'
-      + 'Age ' + c.age_missing
-      + '<span class="case-meta-dot"></span>'
-      + dateStr
-      + (yearsAgo > 0 ? '<span class="case-meta-dot"></span>' + yearsAgo + ' yr' + (yearsAgo!==1?'s':'') + ' ago' : '')
-      + '</div>'
-      + '<div class="case-location">📍 ' + c.city + ', ' + c.state + '</div>'
-      + '<div class="case-desc">' + (c.circumstances||'') + '</div>'
-      + '</div>'
-      + '</div>';
-  }).join('');
-}
-
-// Case detail
-function openCase(id) {
-  var c = null;
-  for (var i=0;i<cases.length;i++){ if(cases[i].id===id){ c=cases[i]; break; } }
-  if (!c) return;
-
-  // Update URL hash for sharing
-  window.location.hash = 'case-' + id;
-
-  var d = new Date(c.date_missing);
-  var dateStr = d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  var statusLabels = { active:'ACTIVE CASE', endangered:'ENDANGERED MISSING', cold:'COLD CASE', 'found-safe':'✅ FOUND — SAFE', 'found-deceased':'🕊️ FOUND — DECEASED' };
-  var statusColors = { active:'var(--red)', endangered:'var(--amber)', cold:'#93c5fd' };
-
-  document.getElementById('case-modal-content').innerHTML =
-    '<div class="modal-header">'
-    + '<div class="modal-header-left"><span class="modal-case-id">' + (c.case_number ? 'CASE #' + c.case_number : 'COMMUNITY SUBMISSION') + '</span></div>'
-    + '<button class="modal-close" onclick="closeCase()">✕ Close</button>'
-    + '</div>'
-    + (c.photo ? '<img class="modal-photo" src="' + c.photo + '" alt="' + c.name + '" onclick="openPhotoLightbox(\'' + c.photo + '\')" style="cursor:zoom-in;" title="Click to expand">' : '<div class="modal-photo-placeholder">👤</div>')
-    + '<div class="modal-body">'
-    + '<div class="modal-name">' + c.name + '</div>'
-    + '<div class="modal-status-row">'
-    + '<span class="case-status ' + c.status + '">' + (statusLabels[c.status]||c.status.toUpperCase()) + '</span>'
-    + '</div>'
-    + '<div class="modal-section-title">Case Details</div>'
-    + '<div class="modal-grid">'
-    + '<div><div class="modal-field-label">Date of Birth</div><div class="modal-field-val">' + (c.dob || 'Unknown') + '</div></div>'
-    + '<div><div class="modal-field-label">Age at Disappearance</div><div class="modal-field-val">' + c.age_missing + ' years old</div></div>'
-    + '<div><div class="modal-field-label">Date Last Seen</div><div class="modal-field-val">' + dateStr + '</div></div>'
-    + '<div><div class="modal-field-label">Last Known Location</div><div class="modal-field-val">' + c.city + ', ' + c.state + '</div></div>'
-    + (c.height ? '<div><div class="modal-field-label">Height</div><div class="modal-field-val">' + c.height + '</div></div>' : '')
-    + (c.weight ? '<div><div class="modal-field-label">Weight</div><div class="modal-field-val">' + c.weight + '</div></div>' : '')
-    + (c.hair ? '<div><div class="modal-field-label">Hair</div><div class="modal-field-val">' + c.hair + '</div></div>' : '')
-    + (c.eyes ? '<div><div class="modal-field-label">Eyes</div><div class="modal-field-val">' + c.eyes + '</div></div>' : '')
-    + '</div>'
-    + (c.distinguishing ? '<div class="modal-section-title" style="margin-top:1rem">Distinguishing Features</div><p class="modal-description">' + c.distinguishing + '</p>' : '')
-    + '<div class="modal-section-title">Circumstances</div>'
-    + '<p class="modal-description">' + (c.circumstances||'No additional information available.') + '</p>'
-    + '<div class="modal-section-title">Share This Case</div>'
-    + '<div class="share-grid">'
-    + '<button class="share-btn copy-link" onclick="shareCase(\'' + c.id + '\')">🔗 Copy Link</button>'
-    + '<button class="share-btn caption" onclick="copyCaption(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">📋 Copy Caption</button>'
-    + '<button class="share-btn secondary" onclick="printFlyer(\'' + c.id + '\')">🖨️ Print Flyer</button>'
-    + '</div>'
-    + (c.namus_url ? '<div class="modal-actions" style="margin-top:0.75rem;"><a class="action-btn secondary" href="' + c.namus_url + '" target="_blank">🔎 View on NamUs</a></div>' : '')
-    + '</div>'
-    + '<div class="modal-section-title">Submit a Tip</div>'
-    + '<div class="tip-form">'
-    + '<p style="font-size:11px;color:var(--text3);margin-bottom:0.5rem;">Have information about this case? Submit anonymously below. <strong style="color:var(--amber)">If you have urgent information, call 911 immediately.</strong> Tips are reviewed and may be forwarded to appropriate contacts.</p>'
-    + '<textarea id="tip-text" placeholder="Describe what you know or saw..."></textarea>'
-    + '<button class="tip-submit" onclick="submitTip(\'' + c.id + '\',\'' + c.name + '\')">Submit Tip Anonymously</button>'
-    + '</div>'
-    + '<button class="action-btn danger" style="font-size:11px;margin-top:0.5rem;" onclick="requestRemoval(\'' + c.name + '\')">Request Case Removal</button>'
-    + '</div>'
-    + '<div class="mobile-close-bar"><button class="mobile-close-btn" onclick="closeCase()">✕ Close</button></div>';
-
-  document.getElementById('case-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeCase() {
-  document.getElementById('case-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-  history.pushState('', document.title, window.location.pathname);
-}
-
-// Share functions
-function getCaseUrl(id) {
-  return window.location.origin + window.location.pathname + '#case-' + id;
-}
-
-function getCaption(name, city, state, date_missing) {
-  var d = new Date(date_missing);
-  var dateStr = d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  return 'MISSING: ' + name + ', last seen ' + dateStr + ' in ' + city + ', ' + state + '. If you have any information please call 911 immediately.';
-}
-
-function copyToClipboard(text, successMsg) {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function(){
-      showToast(successMsg);
-    }).catch(function(){ fallbackCopy(text, successMsg); });
-  } else {
-    fallbackCopy(text, successMsg);
-  }
-}
-
-function fallbackCopy(text, successMsg) {
-  var ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.position = 'fixed';
-  ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.focus();
-  ta.select();
-  try { document.execCommand('copy'); showToast(successMsg); }
-  catch(e) { showToast('Please copy manually'); }
-  document.body.removeChild(ta);
-}
-
-function nativeShare(id, name, city, state, date_missing) {
-  var url = getCaseUrl(id);
-  var text = getCaption(name, city, state, date_missing);
-  if (navigator.share) {
-    navigator.share({ title: 'MISSING: ' + name, text: text, url: url });
-  } else {
-    copyToClipboard(text + ' ' + url, '📋 Caption + link copied!');
-  }
-}
-
-function shareFacebook(id, name, city, state, date_missing) {
-  var url = getCaseUrl(id);
-  var caption = getCaption(name, city, state, date_missing) + '\n\n' + url;
-  copyToClipboard(caption, '📋 Caption copied! Paste it into your Facebook post.');
-  setTimeout(function(){
-    if (confirm('Caption copied to clipboard!\n\nClick OK to open Facebook — then paste the caption into your post with Ctrl+V or long-press → Paste.')) {
-      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
-    }
-  }, 300);
-}
-
-function shareTwitter(id, name, city, state, date_missing) {
-  var url = getCaseUrl(id);
-  var d = new Date(date_missing);
-  var dateStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  var tweet = '\ud83d\udea8 MISSING: ' + name + ', last seen ' + dateStr + ' in ' + city + ', ' + state + '. Call 911 if you have info. ' + url + ' #Missing #StillMissing';
-  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweet), '_blank');
-}
-
-function shareSMS(id, name, city, state, date_missing) {
-  var url = getCaseUrl(id);
-  var caption = getCaption(name, city, state, date_missing) + ' ' + url;
-  window.open('sms:?body=' + encodeURIComponent(caption));
-}
-
-function copyCaption(id, name, city, state, date_missing) {
-  var url = getCaseUrl(id);
-  var caption = getCaption(name, city, state, date_missing) + '\n\n' + url;
-  copyToClipboard(caption, '📋 Caption copied — ready to paste anywhere!');
-}
-
-function showToast(msg) {
-  var toast = document.getElementById('share-toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(function(){ toast.classList.remove('show'); }, 3000);
-}
-
-function submitTip(caseId, caseName) {
-  var text = document.getElementById('tip-text').value;
-  if (!text.trim()) return;
-  fetch('https://formspree.io/f/xojbdjbq', {
-    method:'POST',
-    body: JSON.stringify({ type:'TIP', case_id:caseId, case_name:caseName, tip:text }),
-    headers:{ 'Content-Type':'application/json', 'Accept':'application/json' }
-  }).then(function(){
-    document.getElementById('tip-text').value = '';
-    alert('Tip submitted. Thank you for helping.');
-  });
-}
-
-function requestRemoval(name) {
-  var reason = prompt('Please provide your reason for requesting removal of "' + name + '":\n\n(e.g. I am a family member and no longer wish this case to be listed, case has been resolved, information is inaccurate, etc.)');
-  if (!reason || !reason.trim()) return;
-  var relationship = prompt('What is your relationship to this person or case?');
-  if (!relationship || !relationship.trim()) return;
-  fetch('https://formspree.io/f/xojbdjbq', {
-    method:'POST',
-    body: JSON.stringify({ type:'REMOVAL_REQUEST', case_name:name, reason:reason, relationship:relationship }),
-    headers:{ 'Content-Type':'application/json', 'Accept':'application/json' }
-  }).then(function(){
-    alert('Removal request submitted. We will review and respond within 24-48 hours. Requests from verified family members are always honored.');
-  });
-}
-
-function shareCase(id) {
-  copyToClipboard(getCaseUrl(id), '🔗 Case link copied to clipboard');
-}
-
-// Stats bar
-function updateBottomStats() {
-  var active = cases.filter(function(c){ return c.status==='active'||c.status==='endangered'; }).length;
-  var cold = cases.filter(function(c){ return c.status==='cold'; }).length;
-  var counties = new Set(cases.map(function(c){ return c.city; })).size;
-  var found = cases.filter(function(c){ return c.status==='found-safe'||c.status==='found-deceased'; }).length;
-  document.getElementById('stat-active').textContent = active;
-  document.getElementById('stat-cold').textContent = cold;
-  document.getElementById('stat-states').textContent = counties;
-  document.getElementById('stat-found').textContent = found;
-}
-
-// Print flyer
-function printFlyer(id) {
-  var c = null;
-  for (var i=0;i<cases.length;i++){ if(cases[i].id===id){ c=cases[i]; break; } }
-  if (!c) return;
-  var d = new Date(c.date_missing);
-  var dateStr = d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  var statusLabels = { active:'ACTIVE — MISSING', endangered:'ENDANGERED MISSING', cold:'COLD CASE', 'found-safe':'FOUND — SAFE', 'found-deceased':'FOUND — DECEASED' };
-  document.getElementById('flyer-content').innerHTML =
-    '<div class="flyer-top">'
-    + (c.photo ? '<img class="flyer-photo" src="' + c.photo + '" alt="' + c.name + '">' : '<div class="flyer-photo-placeholder">👤</div>')
-    + '<div class="flyer-headline">'
-    + '<div class="flyer-missing-label">MISSING PERSON</div>'
-    + '<div class="flyer-name">' + c.name + '</div>'
-    + '<span class="flyer-status-badge ' + c.status + '">' + (statusLabels[c.status]||c.status.toUpperCase()) + '</span>'
-    + '<div class="flyer-detail-row"><span class="flyer-detail-label">Last Seen:</span><span class="flyer-detail-val">' + dateStr + '</span></div>'
-    + '<div class="flyer-detail-row"><span class="flyer-detail-label">Location:</span><span class="flyer-detail-val">' + c.city + ', ' + c.state + '</span></div>'
-    + '<div class="flyer-detail-row"><span class="flyer-detail-label">Age:</span><span class="flyer-detail-val">' + c.age_missing + ' years old</span></div>'
-    + (c.height ? '<div class="flyer-detail-row"><span class="flyer-detail-label">Height:</span><span class="flyer-detail-val">' + c.height + '</span></div>' : '')
-    + (c.weight ? '<div class="flyer-detail-row"><span class="flyer-detail-label">Weight:</span><span class="flyer-detail-val">' + c.weight + '</span></div>' : '')
-    + (c.hair ? '<div class="flyer-detail-row"><span class="flyer-detail-label">Hair:</span><span class="flyer-detail-val">' + c.hair + '</span></div>' : '')
-    + (c.eyes ? '<div class="flyer-detail-row"><span class="flyer-detail-label">Eyes:</span><span class="flyer-detail-val">' + c.eyes + '</span></div>' : '')
-    + '</div></div>'
-    + (c.distinguishing ? '<div class="flyer-section-title">Distinguishing Features</div><p class="flyer-circumstances">' + c.distinguishing + '</p>' : '')
-    + '<div class="flyer-section-title">Circumstances</div>'
-    + '<p class="flyer-circumstances">' + (c.circumstances||'') + '</p>'
-    + (c.case_number ? '<div class="flyer-section-title">Official Case Number</div><p class="flyer-circumstances">' + c.case_number + '</p>' : '')
-    + '<div class="flyer-tip-box">⚠️ IF YOU HAVE INFORMATION — CALL 911 IMMEDIATELY</div>'
-    + '<div class="flyer-footer">'
-    + '<div class="flyer-footer-left">This flyer was generated by<br><span class="flyer-footer-site">StillMissing.us</span><br>A free community missing persons database</div>'
-    + (c.case_number ? '<div style="font-size:10px;color:#666;">Case: ' + c.case_number + '</div>' : '')
-    + '</div>';
-  document.getElementById('flyer-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeFlyer() {
-  document.getElementById('flyer-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.getElementById('flyer-overlay').addEventListener('click', function(e){ if(e.target===this) closeFlyer(); });
-
-function openPhotoLightbox(src) {
-  var lb = document.getElementById('photo-lightbox');
-  document.getElementById('photo-lightbox-img').src = src;
-  lb.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-}
-
-function closePhotoLightbox() {
-  document.getElementById('photo-lightbox').style.display = 'none';
-  document.body.style.overflow = '';
-}
-
-// Form
-function openForm() {
-  document.getElementById('form-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeForm() {
-  document.getElementById('form-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.getElementById('form-overlay').addEventListener('click', function(e){ if(e.target===this) closeForm(); });
-document.getElementById('case-overlay').addEventListener('click', function(e){ if(e.target===this) closeCase(); });
-
-document.getElementById('submit-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  var btn = document.getElementById('form-submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'Submitting...';
-  fetch('https://formspree.io/f/xojbdjbq', {
-    method:'POST', body: new FormData(this), headers:{'Accept':'application/json'}
-  }).then(function(r) {
-    if (r.ok) {
-      document.getElementById('submit-form').style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
-    } else {
-      btn.disabled = false;
-      btn.textContent = 'Submit Case for Review';
-      alert('Submission failed. Please try again.');
-    }
-  }).catch(function(){
-    btn.disabled = false;
-    btn.textContent = 'Submit Case for Review';
-    alert('Submission failed. Please try again.');
-  });
-});
-
-// Check for case hash on load
-function checkHash() {
-  var hash = window.location.hash;
-  if (hash && hash.startsWith('#case-')) {
-    var id = hash.replace('#case-','');
-    openCase(id);
-  }
-}
-
-document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeCase(); closeForm(); } });
-
-// Init
-// Render feed immediately — don't wait for map
-updateStats();
-updateBottomStats();
-renderFeed();
-buildTicker();
-checkHash();
-
-// Then load map
-var topoScript = document.createElement('script');
-topoScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js';
-topoScript.onload = function() {
-  initMap();
-};
-document.head.appendChild(topoScript);
-</script>
-</body>
-</html>
