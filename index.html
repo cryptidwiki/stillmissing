@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STILLMISSING.US — National Missing Persons Database</title>
-<meta name="description" content="A community-powered missing persons database and map. Submit cases, share tips, and help bring people home.">
+<title>STILLMISSING.US — West Virginia Missing Persons Database</title>
+<meta name="description" content="A community-powered missing persons database for West Virginia. Submit cases, share tips, and help bring people home.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -337,7 +337,7 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 <header class="site-header">
   <div class="logo-wrap">
     <div class="logo-title">Still<span>Missing</span>.us</div>
-    <div class="logo-sub">National Missing Persons Database</div>
+    <div class="logo-sub">West Virginia Missing Persons Database</div>
   </div>
   <div class="header-search">
     <span class="search-icon">🔍</span>
@@ -346,7 +346,7 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
   <div class="header-stats">
     <div class="hstat"><div class="hstat-num blue" id="total-cases">0</div><div class="hstat-label">Cases</div></div>
     <div class="hstat"><div class="hstat-num amber" id="active-cases">0</div><div class="hstat-label">Active</div></div>
-    <div class="hstat"><div class="hstat-num teal" id="states-count">0</div><div class="hstat-label">States</div></div>
+    <div class="hstat"><div class="hstat-num teal" id="states-count">0</div><div class="hstat-label">Counties</div></div>
   </div>
   <button class="submit-btn" onclick="openForm()">+ Submit a Case</button>
 </header>
@@ -370,7 +370,6 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
       <option value="newest">Newest First</option>
       <option value="oldest">Oldest First</option>
       <option value="name">Name A–Z</option>
-      <option value="state">By State</option>
     </select>
   </div>
 </div>
@@ -380,7 +379,7 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 <div style="background:rgba(245,158,11,0.07);border-bottom:1px solid rgba(245,158,11,0.2);padding:8px 1.5rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
   <span style="font-size:13px;">⚠️</span>
   <p style="font-size:11px;color:rgba(241,245,249,0.55);line-height:1.5;flex:1;min-width:200px;">
-    <strong style="color:rgba(245,158,11,0.8);">Community Resource.</strong> StillMissing.us is maintained by one person. All case information is submitted by the community and may be incomplete or inaccurate. This is not an official law enforcement database. Always contact the listed agency directly to report tips or verify information. Cases are reviewed before publishing but we cannot guarantee accuracy.
+    <strong style="color:rgba(245,158,11,0.8);">Community Resource.</strong> StillMissing.us is a West Virginia community resource maintained by one person. All case information is submitted by the community and may be incomplete or inaccurate. This is not an official law enforcement database. Always contact the listed agency directly to report tips or verify information. Cases are reviewed before publishing but we cannot guarantee accuracy.
   </p>
 </div>
 
@@ -388,7 +387,7 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 <div class="main-layout">
   <div class="map-section">
     <div class="map-header">
-      <span class="map-title">// Live Case Map — United States //</span>
+      <span class="map-title">// Live Case Map — West Virginia //</span>
       <span class="map-hint">Click a state to filter cases</span>
     </div>
     <div id="map-container"></div>
@@ -480,23 +479,8 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
             <input type="text" name="city" class="form-input" required placeholder="City">
           </div>
           <div class="form-field">
-            <label class="form-label">State <span>*</span></label>
-            <select name="state" class="form-input" required>
-              <option value="">— State —</option>
-              <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
-              <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
-              <option>FL</option><option>GA</option><option>HI</option><option>ID</option>
-              <option>IL</option><option>IN</option><option>IA</option><option>KS</option>
-              <option>KY</option><option>LA</option><option>ME</option><option>MD</option>
-              <option>MA</option><option>MI</option><option>MN</option><option>MS</option>
-              <option>MO</option><option>MT</option><option>NE</option><option>NV</option>
-              <option>NH</option><option>NJ</option><option>NM</option><option>NY</option>
-              <option>NC</option><option>ND</option><option>OH</option><option>OK</option>
-              <option>OR</option><option>PA</option><option>RI</option><option>SC</option>
-              <option>SD</option><option>TN</option><option>TX</option><option>UT</option>
-              <option>VT</option><option>VA</option><option>WA</option><option>WV</option>
-              <option>WI</option><option>WY</option>
-            </select>
+            <label class="form-label">State</label>
+            <input type="text" name="state" class="form-input" value="WV" readonly style="color:var(--text3);cursor:not-allowed;">
           </div>
         </div>
         <div class="form-row">
@@ -602,10 +586,7 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
     </div>
     <div class="stat-block">
       <div class="stat-block-num blue" id="stat-states">0</div>
-      <div class="stat-block-label">States Represented</div>
-    </div>
-    <div class="stat-block">
-      <div class="stat-block-num green" id="stat-found">0</div>
+      <div class="stat-block-label">WV Counties</div>
       <div class="stat-block-label">Cases Resolved</div>
     </div>
   </div>
@@ -615,8 +596,8 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
     <div class="mission-section">
       <div class="section-tag">// Our Mission //</div>
       <div class="section-title">Built to Help Bring People Home</div>
-      <p class="section-text">StillMissing.us is a free, community-powered missing persons database built and maintained by one person. It exists to give families a place to be heard, give researchers a tool to organize cases, and give communities a way to visualize where people are going missing.</p>
-      <p class="section-text">This is not an official law enforcement database. It complements existing systems — it does not replace them. Every case is reviewed before publishing. Families may request removal at any time.</p>
+      <p class="section-text">StillMissing.us is a free, community-powered missing persons database focused on West Virginia, built and maintained by one person. It exists to give WV families a place to be heard, give researchers a tool to organize cases, and give communities a way to visualize where people are going missing in our state.</p>
+      <p class="section-text">West Virginia and Appalachia are historically underserved by national missing persons coverage. This site exists to change that locally. Every case is reviewed before publishing. Families may request removal at any time.</p>
       <ul class="mission-points">
         <li>All case information is submitted by the community and verified before publishing</li>
         <li>If you have urgent information about a missing person, call 911 immediately</li>
@@ -666,7 +647,7 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 
   <!-- FOOTER -->
   <div class="site-footer">
-    <span>© 2026 STILLMISSING.US — COMMUNITY MISSING PERSONS DATABASE</span>
+    <span>© 2026 STILLMISSING.US — WEST VIRGINIA MISSING PERSONS DATABASE</span>
     <div class="footer-links">
       <span style="color:var(--text3);font-size:10px;">If you have urgent information about a missing person — call 911</span>
     </div>
@@ -722,8 +703,8 @@ function updateStats() {
   var list = cases;
   document.getElementById('total-cases').textContent = list.length;
   document.getElementById('active-cases').textContent = list.filter(function(c){ return c.status === 'active' || c.status === 'endangered'; }).length;
-  var states = new Set(list.map(function(c){ return c.state; }));
-  document.getElementById('states-count').textContent = states.size;
+  var counties = new Set(list.map(function(c){ return c.city; }));
+  document.getElementById('states-count').textContent = counties.size;
   document.getElementById('feed-count').textContent = getFiltered().length + ' cases';
 }
 
@@ -1103,11 +1084,11 @@ function shareCase(id) {
 function updateBottomStats() {
   var active = cases.filter(function(c){ return c.status==='active'||c.status==='endangered'; }).length;
   var cold = cases.filter(function(c){ return c.status==='cold'; }).length;
-  var states = new Set(cases.map(function(c){ return c.state; })).size;
+  var counties = new Set(cases.map(function(c){ return c.city; })).size;
   var found = cases.filter(function(c){ return c.status==='found-safe'||c.status==='found-deceased'; }).length;
   document.getElementById('stat-active').textContent = active;
   document.getElementById('stat-cold').textContent = cold;
-  document.getElementById('stat-states').textContent = states;
+  document.getElementById('stat-states').textContent = counties;
   document.getElementById('stat-found').textContent = found;
 }
 
