@@ -1,863 +1,170 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STILLMISSING.US — National Missing Persons Database</title>
-<meta name="description" content="A community-powered missing persons database and map. Submit cases, share tips, and help bring people home.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --navy: #0a0e1a;
-  --navy2: #0d1220;
-  --navy3: #111829;
-  --navy4: #162035;
-  --blue: #1a56db;
-  --blue2: #1e429f;
-  --blue-soft: rgba(26,86,219,0.12);
-  --amber: #f59e0b;
-  --amber2: rgba(245,158,11,0.12);
-  --teal: #0d9488;
-  --teal2: rgba(13,148,136,0.12);
-  --red: #ef4444;
-  --red2: rgba(239,68,68,0.12);
-  --text: #f1f5f9;
-  --text2: rgba(241,245,249,0.65);
-  --text3: rgba(241,245,249,0.35);
-  --border: rgba(241,245,249,0.08);
-  --border2: rgba(241,245,249,0.15);
-  --mono: 'JetBrains Mono', monospace;
-  --sans: 'Inter', sans-serif;
-  --serif: 'DM Serif Display', serif;
-}
+// ═══════════════════════════════════════════════════
+// STILLMISSING.US — CASE DATABASE
+// ═══════════════════════════════════════════════════
+// To add a new case, copy the template and paste
+// it before the last ]; then push to GitHub.
+//
+// TEMPLATE:
+// {
+//   id: "sm-008",                    ← next ID in sequence
+//   name: "Full Name",
+//   age_missing: 25,                 ← age when they went missing
+//   dob: "1990-01-15",              ← date of birth YYYY-MM-DD
+//   date_missing: "2024-03-10",     ← date last seen YYYY-MM-DD
+//   status: "active",               // "active" / "endangered" / "cold"
+//   city: "Chicago",
+//   state: "IL",                    ← 2-letter state code
+//   height: "5'8\"",
+//   weight: "160 lbs",
+//   hair: "Brown",
+//   eyes: "Blue",
+//   distinguishing: "Tattoo of eagle on left forearm",
+//   circumstances: "Full description of disappearance.",
+//   case_number: "NamUs MP12345",    ← official case number if exists
+//   namus_url: "https://www.namus.gov/MissingPersons/Case#/12345",
+//   photo: ""                        ← leave blank or "images/filename.jpg"
+// },
+// ═══════════════════════════════════════════════════
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { background: var(--navy); color: var(--text); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
-
-/* STICKY WRAP */
-.sticky-wrap { position: sticky; top: 0; z-index: 100; }
-
-/* ALERT BAR */
-.alert-bar { background: var(--blue); padding: 7px 1.5rem; display: flex; align-items: center; gap: 1rem; overflow: hidden; }
-.alert-bar-label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: #fff; white-space: nowrap; flex-shrink: 0; background: rgba(0,0,0,0.2); padding: 2px 8px; font-family: var(--mono); }
-.alert-ticker { display: flex; overflow: hidden; flex: 1; }
-.alert-text { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); white-space: nowrap; animation: ticker 35s linear infinite; letter-spacing: 0.03em; }
-@keyframes ticker { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
-.alert-time { font-size: 10px; font-family: var(--mono); color: rgba(255,255,255,0.6); white-space: nowrap; flex-shrink: 0; }
-
-/* HEADER */
-.site-header { background: var(--navy2); border-bottom: 1px solid var(--border2); padding: 0.75rem 1.5rem; display: flex; align-items: center; gap: 1.5rem; }
-.logo-wrap { display: flex; flex-direction: column; }
-.logo-title { font-family: var(--serif); font-size: 24px; color: var(--text); line-height: 1; letter-spacing: 0.01em; }
-.logo-title span { color: var(--blue); }
-.logo-sub { font-size: 9px; letter-spacing: 0.2em; color: var(--text3); margin-top: 3px; font-family: var(--mono); text-transform: uppercase; }
-.header-search { flex: 1; max-width: 400px; position: relative; }
-.header-search input { width: 100%; background: var(--navy3); border: 1px solid var(--border2); color: var(--text); font-family: var(--sans); font-size: 13px; padding: 8px 12px 8px 36px; outline: none; border-radius: 4px; }
-.header-search input::placeholder { color: var(--text3); }
-.header-search input:focus { border-color: var(--blue); }
-.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; pointer-events: none; }
-.header-stats { display: flex; gap: 2rem; margin-left: auto; }
-.hstat-num { font-family: var(--mono); font-size: 20px; font-weight: 500; line-height: 1; }
-.hstat-num.blue { color: var(--blue); }
-.hstat-num.amber { color: var(--amber); }
-.hstat-num.teal { color: var(--teal); }
-.hstat-label { font-size: 9px; letter-spacing: 0.15em; color: var(--text3); margin-top: 2px; text-transform: uppercase; }
-.submit-btn { font-family: var(--sans); font-size: 13px; font-weight: 600; letter-spacing: 0.05em; padding: 9px 20px; background: var(--blue); color: #fff; border: none; cursor: pointer; border-radius: 4px; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
-.submit-btn:hover { background: var(--blue2); transform: translateY(-1px); }
-
-/* FILTER BAR */
-.filter-bar { background: var(--navy3); border-bottom: 1px solid var(--border); padding: 0.5rem 1.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.filter-label { font-size: 10px; letter-spacing: 0.15em; color: var(--text3); white-space: nowrap; font-family: var(--mono); margin-right: 4px; }
-.fbtn { font-family: var(--sans); font-size: 12px; font-weight: 500; padding: 4px 12px; border: 1px solid var(--border2); background: transparent; color: var(--text2); cursor: pointer; transition: all 0.12s; border-radius: 20px; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
-.fbtn:hover { border-color: var(--text); color: var(--text); }
-.fbtn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
-.fbtn-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.sort-wrap { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
-.sort-select { background: var(--navy3); border: 1px solid var(--border2); color: var(--text2); font-family: var(--sans); font-size: 12px; padding: 4px 10px; outline: none; cursor: pointer; border-radius: 4px; }
-
-/* MAIN LAYOUT */
-.main-layout { display: grid; grid-template-columns: 1fr 420px; height: calc(100vh - 118px); }
-
-/* MAP */
-.map-section { position: relative; background: var(--navy); overflow: hidden; border-right: 1px solid var(--border2); }
-.map-header { position: absolute; top: 0; left: 0; right: 0; padding: 0.75rem 1rem; background: linear-gradient(to bottom, rgba(10,14,26,0.98), transparent); z-index: 10; display: flex; align-items: center; justify-content: space-between; }
-.map-title { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; color: var(--amber); text-transform: uppercase; }
-.map-hint { font-size: 10px; color: var(--text3); letter-spacing: 0.08em; }
-#map-container { width: 100%; height: 100%; }
-#map-container svg { width: 100%; height: 100%; display: block; }
-.state { fill: #0d1525; stroke: #1a2540; stroke-width: 0.5; cursor: pointer; transition: fill 0.15s; }
-.state:hover { fill: #162035; }
-.state.active { stroke: var(--amber); stroke-width: 1.5; }
-.state-tooltip { position: absolute; background: rgba(10,14,26,0.96); border: 1px solid var(--border2); padding: 6px 12px; font-size: 11px; font-family: var(--sans); color: var(--text); pointer-events: none; z-index: 50; display: none; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-.state-banner { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); background: rgba(10,14,26,0.92); border: 1px solid var(--amber); padding: 7px 20px; font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--amber); display: none; z-index: 10; cursor: pointer; white-space: nowrap; border-radius: 4px; }
-.state-banner:hover { background: rgba(245,158,11,0.1); }
-.map-legend { position: absolute; bottom: 1rem; left: 1rem; background: rgba(10,14,26,0.92); border: 1px solid var(--border2); padding: 0.6rem 0.75rem; z-index: 10; border-radius: 4px; }
-.legend-title { font-size: 8px; letter-spacing: 0.2em; color: var(--text3); margin-bottom: 6px; font-family: var(--mono); text-transform: uppercase; }
-.legend-items { display: flex; gap: 8px; align-items: center; }
-.legend-item { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--text3); }
-.legend-swatch { width: 18px; height: 8px; border-radius: 2px; }
-
-/* FEED */
-.feed-panel { background: var(--navy2); display: flex; flex-direction: column; overflow: hidden; }
-.feed-header { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.feed-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
-.feed-title { font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; color: var(--text); text-transform: uppercase; }
-.feed-count { font-size: 10px; color: var(--text3); font-family: var(--mono); }
-.feed-search-wrap { position: relative; }
-.feed-search { width: 100%; background: var(--navy3); border: 1px solid var(--border); color: var(--text); font-family: var(--sans); font-size: 12px; padding: 6px 10px 6px 30px; outline: none; border-radius: 4px; }
-.feed-search::placeholder { color: var(--text3); }
-.feed-search:focus { border-color: var(--blue); }
-.feed-search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--text3); pointer-events: none; }
-.feed-list { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border2) transparent; }
-.feed-empty { padding: 3rem 1.5rem; text-align: center; color: var(--text3); font-size: 12px; line-height: 1.8; }
-.feed-empty-icon { font-size: 32px; margin-bottom: 1rem; opacity: 0.4; }
-
-/* CASE CARDS */
-.case-card { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; display: flex; gap: 0; overflow: hidden; }
-.case-card:hover { background: var(--navy3); }
-.case-photo { width: 80px; height: 100px; object-fit: cover; flex-shrink: 0; opacity: 0.9; }
-.case-photo-placeholder { width: 80px; height: 100px; background: var(--navy4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 28px; opacity: 0.4; }
-.case-info { padding: 0.75rem; flex: 1; min-width: 0; }
-.case-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 3px; gap: 0.5rem; }
-.case-name { font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.2; }
-.case-status { font-size: 9px; font-weight: 600; letter-spacing: 0.12em; padding: 2px 7px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; font-family: var(--mono); }
-.case-status.active { background: var(--red2); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
-.case-status.cold { background: var(--blue-soft); color: #93c5fd; border: 1px solid rgba(147,197,253,0.3); }
-.case-status.endangered { background: var(--amber2); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
-.case-meta { font-size: 11px; color: var(--text3); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.case-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
-.case-location { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
-.case-desc { font-size: 11px; color: var(--text3); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.case-age-badge { display: inline-block; font-size: 9px; font-family: var(--mono); color: var(--text3); border: 1px solid var(--border); padding: 1px 6px; border-radius: 3px; margin-top: 4px; }
-
-/* DETAIL MODAL */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 1.5rem; }
-.modal-overlay.open { display: flex; }
-.case-modal { background: var(--navy2); border: 1px solid var(--border2); width: min(680px,100%); max-height: 92vh; overflow-y: auto; border-radius: 6px; animation: modalIn 0.2s ease; }
-@keyframes modalIn { from{opacity:0;transform:scale(0.97);} to{opacity:1;transform:scale(1);} }
-.modal-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--navy2); z-index: 10; border-radius: 6px 6px 0 0; }
-.modal-header-left { display: flex; align-items: center; gap: 0.75rem; }
-.modal-case-id { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 0.15em; }
-.modal-close { background: transparent; border: 1px solid var(--border2); color: var(--text2); font-family: var(--sans); font-size: 12px; padding: 5px 14px; cursor: pointer; transition: all 0.12s; border-radius: 4px; }
-.modal-close:hover { border-color: var(--red); color: var(--red); }
-.modal-photo { width: 100%; max-height: 320px; object-fit: cover; object-position: top; display: block; }
-.modal-photo-placeholder { width: 100%; height: 200px; background: var(--navy4); display: flex; align-items: center; justify-content: center; font-size: 60px; opacity: 0.2; }
-.modal-body { padding: 1.5rem; }
-.modal-name { font-family: var(--serif); font-size: 32px; margin-bottom: 4px; line-height: 1.1; }
-.modal-status-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
-.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; background: var(--navy3); padding: 1rem; border-radius: 4px; border: 1px solid var(--border); }
-.modal-field-label { font-size: 9px; letter-spacing: 0.2em; color: var(--text3); margin-bottom: 3px; text-transform: uppercase; font-family: var(--mono); }
-.modal-field-val { font-size: 13px; color: var(--text); font-weight: 500; }
-.modal-section-title { font-size: 10px; letter-spacing: 0.2em; color: var(--blue); text-transform: uppercase; font-family: var(--mono); margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--blue-soft); }
-.modal-description { font-size: 13px; line-height: 1.8; color: var(--text2); margin-bottom: 1.5rem; }
-.modal-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-.action-btn { font-family: var(--sans); font-size: 12px; font-weight: 600; padding: 9px 18px; border-radius: 4px; cursor: pointer; transition: all 0.15s; text-decoration: none; display: flex; align-items: center; gap: 6px; border: 1px solid; }
-.action-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
-.action-btn.primary:hover { background: var(--blue2); }
-.action-btn.secondary { background: transparent; border-color: var(--border2); color: var(--text2); }
-.action-btn.secondary:hover { border-color: var(--text); color: var(--text); }
-.action-btn.danger { background: transparent; border-color: rgba(239,68,68,0.4); color: var(--red); }
-.action-btn.danger:hover { background: var(--red2); }
-.tip-form { background: var(--navy3); border: 1px solid var(--border); border-radius: 4px; padding: 1rem; margin-bottom: 1rem; }
-.tip-form textarea { width: 100%; background: var(--navy); border: 1px solid var(--border2); color: var(--text); font-family: var(--sans); font-size: 12px; padding: 8px 10px; outline: none; border-radius: 4px; resize: vertical; min-height: 80px; }
-.tip-form textarea:focus { border-color: var(--blue); }
-.tip-submit { margin-top: 0.5rem; font-family: var(--sans); font-size: 12px; font-weight: 600; padding: 7px 16px; background: var(--teal); border: none; color: #fff; cursor: pointer; border-radius: 4px; transition: all 0.15s; }
-.tip-submit:hover { opacity: 0.85; }
-.namus-link { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--blue); text-decoration: none; padding: 8px 12px; border: 1px solid var(--blue-soft); border-radius: 4px; transition: all 0.12s; }
-.namus-link:hover { background: var(--blue-soft); }
-
-/* SUBMIT FORM MODAL */
-.form-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 1000; align-items: center; justify-content: center; padding: 1.5rem; }
-.form-overlay.open { display: flex; }
-.form-modal { background: var(--navy2); border: 1px solid var(--border2); width: min(660px,100%); max-height: 92vh; overflow: hidden; display: flex; flex-direction: column; border-radius: 6px; animation: modalIn 0.2s ease; }
-.form-modal-header { padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-.form-modal-title { font-family: var(--sans); font-size: 14px; font-weight: 700; letter-spacing: 0.05em; }
-.form-modal-close { background: transparent; border: 1px solid var(--border2); color: var(--text2); font-family: var(--sans); font-size: 12px; padding: 4px 12px; cursor: pointer; border-radius: 4px; }
-.form-modal-close:hover { border-color: var(--red); color: var(--red); }
-.form-body { overflow-y: auto; padding: 1.5rem; flex: 1; }
-.form-notice { background: var(--blue-soft); border: 1px solid rgba(26,86,219,0.3); border-radius: 4px; padding: 0.75rem 1rem; font-size: 12px; color: #93c5fd; line-height: 1.6; margin-bottom: 1.25rem; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-.form-field { margin-bottom: 0.85rem; }
-.form-label { display: block; font-size: 10px; letter-spacing: 0.15em; color: var(--text3); margin-bottom: 5px; text-transform: uppercase; font-family: var(--mono); }
-.form-label span { color: var(--red); }
-.form-input { width: 100%; background: var(--navy3); border: 1px solid var(--border2); color: var(--text); font-family: var(--sans); font-size: 13px; padding: 8px 10px; outline: none; border-radius: 4px; transition: border-color 0.12s; }
-.form-input:focus { border-color: var(--blue); }
-.form-input option { background: var(--navy3); }
-.form-textarea { min-height: 100px; resize: vertical; }
-.form-note { font-size: 10px; color: var(--text3); margin-top: 4px; line-height: 1.5; }
-.form-submit { width: 100%; padding: 12px; background: var(--blue); color: #fff; border: none; font-family: var(--sans); font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.15s; border-radius: 4px; margin-top: 0.5rem; }
-.form-submit:hover { background: var(--blue2); }
-.form-submit:disabled { background: var(--border2); color: var(--text3); cursor: not-allowed; }
-.form-success { text-align: center; padding: 2.5rem 1.5rem; }
-.form-success-icon { font-size: 48px; margin-bottom: 1rem; }
-.form-success-title { font-family: var(--serif); font-size: 24px; margin-bottom: 0.5rem; }
-.form-success-sub { font-size: 13px; color: var(--text2); line-height: 1.7; }
-
-/* MOBILE CLOSE BAR */
-.mobile-close-bar { display: none; position: sticky; bottom: 0; background: var(--navy2); border-top: 1px solid var(--border2); padding: 0.75rem 1rem; z-index: 20; }
-.mobile-close-btn { width: 100%; padding: 12px; background: var(--navy3); border: 1px solid var(--border2); color: var(--text); font-family: var(--sans); font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 4px; }
-
-/* SHARE TOAST */
-.share-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--navy3); border: 1px solid var(--border2); padding: 10px 20px; font-size: 12px; color: var(--text); border-radius: 4px; display: none; z-index: 2000; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-.share-toast.show { display: block; animation: toastIn 0.2s ease; }
-@keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(10px);} to{opacity:1;transform:translateX(-50%) translateY(0);} }
-
-/* MOBILE */
-@media (max-width: 768px) {
-  .main-layout { grid-template-columns: 1fr; grid-template-rows: 45vh 1fr; height: auto; }
-  .feed-panel { height: 55vh; }
-  .header-stats { display: none; }
-  .site-header { padding: 0.6rem 1rem; gap: 0.75rem; flex-wrap: wrap; }
-  .logo-title { font-size: 20px; }
-  .logo-sub { display: none; }
-  .submit-btn { font-size: 11px; padding: 7px 14px; }
-  .filter-bar { padding: 0.4rem 0.75rem; overflow-x: auto; flex-wrap: nowrap; }
-  .fbtn { font-size: 11px; padding: 3px 10px; flex-shrink: 0; }
-  .map-legend { display: none; }
-  .case-modal { width: 100vw; max-height: 95vh; border-radius: 12px 12px 0 0; }
-  .modal-overlay { align-items: flex-end; padding: 0; }
-  .form-modal { width: 100vw; max-height: 95vh; border-radius: 12px 12px 0 0; }
-  .form-overlay { align-items: flex-end; padding: 0; }
-  .modal-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
-  .alert-bar { display: none; }
-  .sort-wrap { display: none; }
-  .mobile-close-bar { display: flex; }
-  .disclaimer-bar { flex-direction: column; gap: 0.25rem; }
-}
-</style>
-</head>
-<body>
-
-<div class="sticky-wrap">
-<!-- ALERT BAR -->
-<div class="alert-bar">
-  <span class="alert-bar-label">⚡ ACTIVE</span>
-  <div class="alert-ticker">
-    <span class="alert-text" id="alert-text">Loading active cases...</span>
-    <span class="alert-text" id="alert-text2"></span>
-  </div>
-  <span class="alert-time" id="alert-time"></span>
-</div>
-
-<!-- HEADER -->
-<header class="site-header">
-  <div class="logo-wrap">
-    <div class="logo-title">Still<span>Missing</span>.us</div>
-    <div class="logo-sub">National Missing Persons Database</div>
-  </div>
-  <div class="header-search">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="main-search" placeholder="Search by name, location, case number...">
-  </div>
-  <div class="header-stats">
-    <div class="hstat"><div class="hstat-num blue" id="total-cases">0</div><div class="hstat-label">Cases</div></div>
-    <div class="hstat"><div class="hstat-num amber" id="active-cases">0</div><div class="hstat-label">Active</div></div>
-    <div class="hstat"><div class="hstat-num teal" id="states-count">0</div><div class="hstat-label">States</div></div>
-  </div>
-  <button class="submit-btn" onclick="openForm()">+ Submit a Case</button>
-</header>
-
-<!-- FILTER BAR -->
-<div class="filter-bar">
-  <span class="filter-label">Filter:</span>
-  <button class="fbtn active" data-filter="all"><span class="fbtn-dot" style="background:var(--text)"></span>All Cases</button>
-  <button class="fbtn" data-filter="active"><span class="fbtn-dot" style="background:var(--red)"></span>Active</button>
-  <button class="fbtn" data-filter="endangered"><span class="fbtn-dot" style="background:var(--amber)"></span>Endangered</button>
-  <button class="fbtn" data-filter="cold"><span class="fbtn-dot" style="background:#93c5fd"></span>Cold Cases</button>
-  <button class="fbtn" data-filter="child"><span class="fbtn-dot" style="background:var(--teal)"></span>Children</button>
-  <button class="fbtn" data-filter="adult"><span class="fbtn-dot" style="background:#a78bfa"></span>Adults</button>
-  <div class="sort-wrap">
-    <select class="sort-select" id="sort-select">
-      <option value="newest">Newest First</option>
-      <option value="oldest">Oldest First</option>
-      <option value="name">Name A–Z</option>
-      <option value="state">By State</option>
-    </select>
-  </div>
-</div>
-</div><!-- end sticky-wrap -->
-
-<!-- DISCLAIMER -->
-<div style="background:rgba(245,158,11,0.07);border-bottom:1px solid rgba(245,158,11,0.2);padding:8px 1.5rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
-  <span style="font-size:13px;">⚠️</span>
-  <p style="font-size:11px;color:rgba(241,245,249,0.55);line-height:1.5;flex:1;min-width:200px;">
-    <strong style="color:rgba(245,158,11,0.8);">Community Resource.</strong> StillMissing.us is maintained by one person. All case information is submitted by the community and may be incomplete or inaccurate. This is not an official law enforcement database. Always contact the listed agency directly to report tips or verify information. Cases are reviewed before publishing but we cannot guarantee accuracy.
-  </p>
-</div>
-
-<!-- MAIN LAYOUT -->
-<div class="main-layout">
-  <div class="map-section">
-    <div class="map-header">
-      <span class="map-title">// Live Case Map — United States //</span>
-      <span class="map-hint">Click a state to filter cases</span>
-    </div>
-    <div id="map-container"></div>
-    <div class="state-tooltip" id="state-tooltip"></div>
-    <div class="state-banner" id="state-banner" onclick="clearStateFilter()"></div>
-    <div class="map-legend">
-      <div class="legend-title">Case Density</div>
-      <div class="legend-items">
-        <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.25)"></div>Low</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.55)"></div>Med</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.88)"></div>High</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:#0d1525;border:1px solid #1a2540"></div>None</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="feed-panel">
-    <div class="feed-header">
-      <div class="feed-header-top">
-        <div class="feed-title" id="feed-title">Case Feed</div>
-        <div class="feed-count" id="feed-count">0 cases</div>
-      </div>
-      <div class="feed-search-wrap">
-        <span class="feed-search-icon">🔍</span>
-        <input type="text" class="feed-search" id="feed-search" placeholder="Search cases...">
-      </div>
-    </div>
-    <div class="feed-list" id="feed-list"></div>
-  </div>
-</div>
-
-<!-- CASE DETAIL MODAL -->
-<div class="modal-overlay" id="case-overlay">
-  <div class="case-modal" id="case-modal-content"></div>
-</div>
-
-<!-- SUBMIT FORM MODAL -->
-<div class="form-overlay" id="form-overlay">
-  <div class="form-modal">
-    <div class="form-modal-header">
-      <div class="form-modal-title">Submit a Missing Person Case</div>
-      <button class="form-modal-close" onclick="closeForm()">✕ Close</button>
-    </div>
-    <div class="form-body">
-      <div class="form-notice">
-        ℹ️ All submissions are reviewed before being published. Only publicly available information will be displayed. Families may request removal at any time. Please include an official case number if one exists.
-      </div>
-      <form id="submit-form" action="https://formspree.io/f/xojbdjbq" method="POST">
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">First Name <span>*</span></label>
-            <input type="text" name="first_name" class="form-input" required placeholder="First name">
-          </div>
-          <div class="form-field">
-            <label class="form-label">Last Name <span>*</span></label>
-            <input type="text" name="last_name" class="form-input" required placeholder="Last name">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">Date of Birth</label>
-            <input type="date" name="dob" class="form-input">
-          </div>
-          <div class="form-field">
-            <label class="form-label">Age at Disappearance <span>*</span></label>
-            <input type="number" name="age" class="form-input" required placeholder="Age" min="0" max="120">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">Date Last Seen <span>*</span></label>
-            <input type="date" name="date_missing" class="form-input" required>
-          </div>
-          <div class="form-field">
-            <label class="form-label">Case Status <span>*</span></label>
-            <select name="status" class="form-input" required>
-              <option value="">— Select —</option>
-              <option value="active">Active — Recent</option>
-              <option value="endangered">Endangered Missing</option>
-              <option value="cold">Cold Case</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">City Last Seen <span>*</span></label>
-            <input type="text" name="city" class="form-input" required placeholder="City">
-          </div>
-          <div class="form-field">
-            <label class="form-label">State <span>*</span></label>
-            <select name="state" class="form-input" required>
-              <option value="">— State —</option>
-              <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
-              <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
-              <option>FL</option><option>GA</option><option>HI</option><option>ID</option>
-              <option>IL</option><option>IN</option><option>IA</option><option>KS</option>
-              <option>KY</option><option>LA</option><option>ME</option><option>MD</option>
-              <option>MA</option><option>MI</option><option>MN</option><option>MS</option>
-              <option>MO</option><option>MT</option><option>NE</option><option>NV</option>
-              <option>NH</option><option>NJ</option><option>NM</option><option>NY</option>
-              <option>NC</option><option>ND</option><option>OH</option><option>OK</option>
-              <option>OR</option><option>PA</option><option>RI</option><option>SC</option>
-              <option>SD</option><option>TN</option><option>TX</option><option>UT</option>
-              <option>VT</option><option>VA</option><option>WA</option><option>WV</option>
-              <option>WI</option><option>WY</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">Height</label>
-            <input type="text" name="height" class="form-input" placeholder="e.g. 5'6&quot;">
-          </div>
-          <div class="form-field">
-            <label class="form-label">Weight</label>
-            <input type="text" name="weight" class="form-input" placeholder="e.g. 130 lbs">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">Hair Color</label>
-            <input type="text" name="hair" class="form-input" placeholder="Hair color">
-          </div>
-          <div class="form-field">
-            <label class="form-label">Eye Color</label>
-            <input type="text" name="eyes" class="form-input" placeholder="Eye color">
-          </div>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Distinguishing Features</label>
-          <input type="text" name="distinguishing" class="form-input" placeholder="Tattoos, scars, birthmarks, etc.">
-        </div>
-        <div class="form-field">
-          <label class="form-label">Circumstances of Disappearance <span>*</span></label>
-          <textarea name="circumstances" class="form-input form-textarea" required placeholder="Describe what is known about how and when this person went missing..."></textarea>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Official Case Number</label>
-          <input type="text" name="case_number" class="form-input" placeholder="NamUs, police report, or FBI case number">
-          <div class="form-note">If this person is listed on NamUs or another official database, please include the case number.</div>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Photo URL</label>
-          <input type="url" name="photo_url" class="form-input" placeholder="Link to a photo (imgur, Google Drive, etc.)">
-        </div>
-        <div class="form-field">
-          <label class="form-label">Your Relationship to This Person <span>*</span></label>
-          <select name="relationship" class="form-input" required>
-            <option value="">— Select —</option>
-            <option>Family Member</option>
-            <option>Friend</option>
-            <option>True Crime Researcher</option>
-            <option>Law Enforcement</option>
-            <option>Concerned Community Member</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Your Contact Email</label>
-          <input type="email" name="submitter_email" class="form-input" placeholder="For follow-up questions only — not published">
-          <div class="form-note">Your email will never be published. Used only if we need to verify information.</div>
-        </div>
-        <button type="submit" class="form-submit" id="form-submit-btn">Submit Case for Review</button>
-      </form>
-      <div id="form-success" style="display:none;" class="form-success">
-        <div class="form-success-icon">✅</div>
-        <div class="form-success-title">Case Submitted</div>
-        <div class="form-success-sub">Thank you. Your submission will be reviewed within 48 hours. If approved, the case will be added to the database and map. If you provided contact information we may reach out to verify details.</div>
-        <button onclick="closeForm()" style="margin-top:1.5rem;background:var(--blue);border:none;color:#fff;font-family:var(--sans);font-size:13px;font-weight:600;padding:10px 24px;cursor:pointer;border-radius:4px;">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="share-toast" id="share-toast">🔗 Case link copied to clipboard</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="cases.js"></script>
-<script>
-var activeFilter = 'all';
-var activeState = null;
-var searchQuery = '';
-var sortMode = 'newest';
-var projection;
-
-var fipsToState = {
-  '01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT',
-  '10':'DE','11':'DC','12':'FL','13':'GA','15':'HI','16':'ID','17':'IL',
-  '18':'IN','19':'IA','20':'KS','21':'KY','22':'LA','23':'ME','24':'MD',
-  '25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE',
-  '32':'NV','33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND',
-  '39':'OH','40':'OK','41':'OR','42':'PA','44':'RI','45':'SC','46':'SD',
-  '47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV',
-  '55':'WI','56':'WY'
-};
-
-var stateNames = {
-  'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
-  'CO':'Colorado','CT':'Connecticut','DE':'Delaware','FL':'Florida','GA':'Georgia',
-  'HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa',
-  'KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MD':'Maryland',
-  'MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi',
-  'MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire',
-  'NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina',
-  'ND':'North Dakota','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PA':'Pennsylvania',
-  'RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee',
-  'TX':'Texas','UT':'Utah','VT':'Vermont','VA':'Virginia','WA':'Washington',
-  'WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'
-};
-
-// Clock
-function updateClock() {
-  var el = document.getElementById('alert-time');
-  if (el) el.textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-}
-setInterval(updateClock, 60000);
-updateClock();
-
-// Stats
-function updateStats() {
-  var list = cases;
-  document.getElementById('total-cases').textContent = list.length;
-  document.getElementById('active-cases').textContent = list.filter(function(c){ return c.status === 'active' || c.status === 'endangered'; }).length;
-  var states = new Set(list.map(function(c){ return c.state; }));
-  document.getElementById('states-count').textContent = states.size;
-  document.getElementById('feed-count').textContent = getFiltered().length + ' cases';
-}
-
-// Alert ticker
-function buildTicker() {
-  var active = cases.filter(function(c){ return c.status === 'active' || c.status === 'endangered'; });
-  var text = active.map(function(c){
-    return 'MISSING: ' + c.name + ' — ' + c.city + ', ' + c.state + ' — Last seen ' + new Date(c.date_missing).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  }).join(' &nbsp;•&nbsp; ') + ' &nbsp;•&nbsp; ';
-  var doubled = text + text;
-  document.getElementById('alert-text').innerHTML = doubled;
-  document.getElementById('alert-text2').innerHTML = doubled;
-}
-
-// Filter
-function getFiltered() {
-  var list = cases;
-  if (activeFilter === 'active') list = list.filter(function(c){ return c.status === 'active'; });
-  else if (activeFilter === 'endangered') list = list.filter(function(c){ return c.status === 'endangered'; });
-  else if (activeFilter === 'cold') list = list.filter(function(c){ return c.status === 'cold'; });
-  else if (activeFilter === 'child') list = list.filter(function(c){ return c.age_missing <= 17; });
-  else if (activeFilter === 'adult') list = list.filter(function(c){ return c.age_missing >= 18; });
-  if (activeState) list = list.filter(function(c){ return c.state === activeState; });
-  if (searchQuery) {
-    var q = searchQuery.toLowerCase();
-    list = list.filter(function(c){
-      return c.name.toLowerCase().includes(q)
-        || c.city.toLowerCase().includes(q)
-        || c.state.toLowerCase().includes(q)
-        || (c.case_number && c.case_number.toLowerCase().includes(q))
-        || (c.circumstances && c.circumstances.toLowerCase().includes(q));
-    });
+var cases = [
+  {
+    id: "sm-001",
+    name: "Maria Elena Vasquez",
+    age_missing: 17,
+    dob: "2006-08-12",
+    date_missing: "2024-11-03",
+    status: "active",
+    city: "San Antonio",
+    state: "TX",
+    height: "5'4\"",
+    weight: "125 lbs",
+    hair: "Black",
+    eyes: "Brown",
+    distinguishing: "Small scar above left eyebrow. Birthmark on right shoulder.",
+    circumstances: "Maria was last seen leaving Jefferson High School on the afternoon of November 3rd, 2024. She told friends she was walking home but never arrived. Her phone last pinged near the corner of Flores Street and Commerce Street at 3:47pm. She was wearing a red hoodie and jeans. Her backpack and school ID were later found in a dumpster two blocks from school.",
+    case_number: "SAPD 2024-111203",
+    le_contact: "San Antonio Police Department — 210-207-7273",
+    namus_url: "",
+    photo: ""
+  },
+  {
+    id: "sm-002",
+    name: "James Robert Calloway",
+    age_missing: 34,
+    dob: "1989-03-22",
+    date_missing: "2023-07-14",
+    status: "cold",
+    city: "Nashville",
+    state: "TN",
+    height: "6'1\"",
+    weight: "185 lbs",
+    hair: "Brown",
+    eyes: "Green",
+    distinguishing: "Full sleeve tattoo on right arm. Missing tip of left index finger from a childhood accident.",
+    circumstances: "James left his apartment on July 14th 2023 telling his roommate he was going for a run along the Cumberland River trail. His running shoes, keys, and wallet were found on the trail near Shelby Bottoms Park. His phone was never located. He had no history of depression and no known enemies. His car remained in the apartment parking lot.",
+    case_number: "MNPD 23-087441",
+    le_contact: "Metro Nashville Police — 615-862-8600",
+    namus_url: "",
+    photo: ""
+  },
+  {
+    id: "sm-003",
+    name: "Destiny Renee Williams",
+    age_missing: 14,
+    dob: "2009-12-01",
+    date_missing: "2024-08-22",
+    status: "endangered",
+    city: "Detroit",
+    state: "MI",
+    height: "5'2\"",
+    weight: "110 lbs",
+    hair: "Black",
+    eyes: "Brown",
+    distinguishing: "Braces on upper teeth. Small heart tattoo on left wrist.",
+    circumstances: "Destiny was last seen leaving her grandmother's home on the east side of Detroit at approximately 9pm on August 22nd 2024. She told her grandmother she was walking to a friend's house two blocks away. The friend reported Destiny never arrived. Destiny had been in contact via text with an unknown individual in the days prior to her disappearance. Detroit Police consider her endangered.",
+    case_number: "DPD 2024-089234",
+    le_contact: "Detroit Police Department — 313-267-4600",
+    namus_url: "",
+    photo: ""
+  },
+  {
+    id: "sm-004",
+    name: "Thomas Alan Kowalski",
+    age_missing: 67,
+    dob: "1956-05-30",
+    date_missing: "2024-01-08",
+    status: "active",
+    city: "Green Bay",
+    state: "WI",
+    height: "5'10\"",
+    weight: "200 lbs",
+    hair: "White",
+    eyes: "Blue",
+    distinguishing: "Wears glasses. Large scar on chin from a car accident. Walks with slight limp.",
+    circumstances: "Thomas was last seen at his home by his wife on the morning of January 8th 2024. She left for work at 7am and returned at 5pm to find him gone. His car was in the driveway, his wallet and phone were on the kitchen table, and his coat was on the hook. Thomas had been recently diagnosed with early-stage dementia. Temperatures that night dropped to -12 degrees. Search parties covered a 10-mile radius without result.",
+    case_number: "GBPD 2024-000891",
+    le_contact: "Green Bay Police Department — 920-448-3200",
+    namus_url: "",
+    photo: ""
+  },
+  {
+    id: "sm-005",
+    name: "Aaliyah Simone Johnson",
+    age_missing: 19,
+    dob: "2004-09-17",
+    date_missing: "2023-03-31",
+    status: "cold",
+    city: "Atlanta",
+    state: "GA",
+    height: "5'6\"",
+    weight: "140 lbs",
+    hair: "Black",
+    eyes: "Brown",
+    distinguishing: "Dimple on left cheek. Nose piercing. Tattoo of a rose on right ankle.",
+    circumstances: "Aaliyah was a freshman at Spelman College. She was last seen leaving a party near campus at approximately 1am on March 31st 2023. Friends said she had called an rideshare but the driver reported she never entered the vehicle. Her last cell phone activity was at 1:23am. Despite extensive investigation by Atlanta PD and the FBI, no significant leads have emerged. Her case received limited media attention.",
+    case_number: "APD 2023-042891",
+    le_contact: "Atlanta Police Department Missing Persons Unit — 404-614-6544",
+    namus_url: "",
+    photo: ""
+  },
+  {
+    id: "sm-006",
+    name: "Connor Michael Hayes",
+    age_missing: 22,
+    dob: "2001-11-08",
+    date_missing: "2024-09-15",
+    status: "active",
+    city: "Portland",
+    state: "OR",
+    height: "6'0\"",
+    weight: "170 lbs",
+    hair: "Red",
+    eyes: "Blue",
+    distinguishing: "Freckles across nose and cheeks. Small anchor tattoo behind left ear.",
+    circumstances: "Connor was last seen at Powell's Books on Burnside Street on the afternoon of September 15th 2024. He was captured on store security footage browsing the travel section at 2:15pm. His roommate reported him missing when he failed to return that night. His bank account has not been accessed since September 14th. He had no known mental health concerns and had recently started a new job he was enthusiastic about.",
+    case_number: "PPB 2024-234567",
+    le_contact: "Portland Police Bureau — 503-823-3333",
+    namus_url: "",
+    photo: ""
+  },
+  {
+    id: "sm-007",
+    name: "Rosa Linda Gutierrez",
+    age_missing: 42,
+    dob: "1981-02-14",
+    date_missing: "2022-06-19",
+    status: "cold",
+    city: "Albuquerque",
+    state: "NM",
+    height: "5'3\"",
+    weight: "135 lbs",
+    hair: "Black",
+    eyes: "Brown",
+    distinguishing: "Gold cross necklace she never removed. Tattoo of her children's names on inner left wrist.",
+    circumstances: "Rosa was a mother of three who worked the night shift at Presbyterian Hospital. She was last seen by coworkers at the end of her shift at 7am on June 19th 2022. She never picked up her children from school that day. Her car was found parked at a gas station on Central Avenue with her purse and phone inside. Her case has received minimal media coverage despite being open for over two years.",
+    case_number: "APD 2022-091234",
+    le_contact: "Albuquerque Police Department — 505-242-COPS",
+    namus_url: "",
+    photo: ""
   }
-  list = list.slice().sort(function(a,b){
-    if (sortMode === 'oldest') return new Date(a.date_missing) - new Date(b.date_missing);
-    if (sortMode === 'name') return a.name.localeCompare(b.name);
-    if (sortMode === 'state') return a.state.localeCompare(b.state);
-    return new Date(b.date_missing) - new Date(a.date_missing);
-  });
-  return list;
-}
-
-// Filter buttons
-document.querySelectorAll('.fbtn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    activeFilter = this.getAttribute('data-filter');
-    document.querySelectorAll('.fbtn').forEach(function(b){ b.classList.remove('active'); });
-    this.classList.add('active');
-    updateHeatmap();
-    renderFeed();
-  });
-});
-
-document.getElementById('sort-select').addEventListener('change', function(){ sortMode = this.value; renderFeed(); });
-document.getElementById('main-search').addEventListener('input', function(){ searchQuery = this.value; renderFeed(); });
-document.getElementById('feed-search').addEventListener('input', function(){ searchQuery = this.value; renderFeed(); });
-
-// Map
-function initMap() {
-  var container = document.getElementById('map-container');
-  var w = 960, h = 600;
-  var svg = d3.select('#map-container').append('svg')
-    .attr('viewBox','0 0 ' + w + ' ' + h)
-    .attr('preserveAspectRatio','xMidYMid meet')
-    .style('width','100%').style('height','100%').style('display','block');
-  svg.append('rect').attr('width',w).attr('height',h).attr('fill','#0a0e1a');
-  svg.append('line').attr('x1',0).attr('y1',h/2).attr('x2',w).attr('y2',h/2).attr('stroke','#0d1525').attr('stroke-width',0.5).attr('stroke-dasharray','4,8');
-  svg.append('line').attr('x1',w/2).attr('y1',0).attr('x2',w/2).attr('y2',h).attr('stroke','#0d1525').attr('stroke-width',0.5).attr('stroke-dasharray','4,8');
-  projection = d3.geoAlbersUsa().scale(1280).translate([w/2, h/2]);
-  var path = d3.geoPath().projection(projection);
-  var tooltip = document.getElementById('state-tooltip');
-  fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
-    .then(function(r){ return r.json(); })
-    .then(function(us) {
-      var statesGeo = topojson.feature(us, us.objects.states);
-      svg.selectAll('.state').data(statesGeo.features).enter().append('path')
-        .attr('class','state').attr('d',path).attr('fill','#0d1525').attr('stroke','#1a2540').attr('stroke-width',0.5)
-        .on('mousemove', function(event, d) {
-          var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
-          var count = getCaseCounts()[abbr] || 0;
-          var mapSection = document.querySelector('.map-section');
-          var rect = mapSection.getBoundingClientRect();
-          tooltip.style.display = 'block';
-          tooltip.style.left = (event.clientX - rect.left + 14) + 'px';
-          tooltip.style.top = (event.clientY - rect.top - 10) + 'px';
-          tooltip.innerHTML = '<strong>' + (stateNames[abbr]||abbr) + '</strong> &nbsp;—&nbsp; '
-            + (count > 0 ? '<span style="color:var(--blue)">' + count + ' case' + (count!==1?'s':'') + '</span>' : '<span style="color:var(--text3)">No cases</span>');
-        })
-        .on('mouseleave', function(){ tooltip.style.display = 'none'; })
-        .on('click', function(event, d) {
-          var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
-          if (!abbr) return;
-          if (activeState === abbr) { clearStateFilter(); return; }
-          activeState = abbr;
-          updateHeatmap();
-          renderFeed();
-          document.getElementById('feed-list').scrollTop = 0;
-          var count = getCaseCounts()[abbr] || 0;
-          var banner = document.getElementById('state-banner');
-          banner.style.display = 'block';
-          banner.textContent = '📍 ' + (stateNames[abbr]||abbr) + ' — ' + count + ' case' + (count!==1?'s':'') + ' — Click to clear';
-        });
-      svg.append('path').datum(topojson.mesh(us, us.objects.states, function(a,b){ return a!==b; }))
-        .attr('fill','none').attr('stroke','#1a2540').attr('stroke-width',0.5).attr('d',path);
-      updateHeatmap();
-    });
-}
-
-function getCaseCounts() {
-  var counts = {};
-  var list = activeFilter === 'all' ? cases : getFiltered();
-  list.forEach(function(c){ counts[c.state] = (counts[c.state]||0) + 1; });
-  return counts;
-}
-
-function updateHeatmap() {
-  var counts = getCaseCounts();
-  var max = Math.max(1, d3.max(Object.values(counts)) || 1);
-  d3.selectAll('.state').attr('fill', function(d) {
-    var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
-    var count = counts[abbr] || 0;
-    var isSelected = activeState && activeState === abbr;
-    if (isSelected) return 'rgba(245,158,11,0.2)';
-    if (count === 0) return '#0d1525';
-    var intensity = count / max;
-    if (intensity < 0.33) return 'rgba(239,68,68,0.25)';
-    if (intensity < 0.66) return 'rgba(239,68,68,0.55)';
-    return 'rgba(239,68,68,0.88)';
-  }).attr('stroke', function(d) {
-    var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
-    return (activeState && activeState === abbr) ? 'rgba(245,158,11,0.9)' : '#1a2540';
-  }).attr('stroke-width', function(d) {
-    var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
-    return (activeState && activeState === abbr) ? 1.5 : 0.5;
-  });
-}
-
-function clearStateFilter() {
-  activeState = null;
-  document.getElementById('state-banner').style.display = 'none';
-  updateHeatmap();
-  renderFeed();
-}
-
-// Feed
-function renderFeed() {
-  var list = getFiltered();
-  document.getElementById('feed-count').textContent = list.length + ' case' + (list.length !== 1 ? 's' : '');
-  var titleEl = document.getElementById('feed-title');
-  titleEl.textContent = activeState ? (stateNames[activeState]||activeState) + ' Cases' : 'Case Feed';
-
-  var el = document.getElementById('feed-list');
-  if (!list.length) {
-    el.innerHTML = '<div class="feed-empty"><div class="feed-empty-icon">🔍</div>'
-      + (searchQuery ? 'No cases match "' + searchQuery + '"' : activeState ? 'No cases in ' + (stateNames[activeState]||activeState) + ' yet.<br><br>Know of a missing person from this state?<br><button onclick="openForm()" style="margin-top:0.75rem;background:var(--blue);border:none;color:#fff;font-family:var(--sans);font-size:12px;font-weight:600;padding:8px 18px;cursor:pointer;border-radius:4px;">Submit a Case</button>' : 'No cases match the current filter.')
-      + '</div>';
-    return;
-  }
-
-  var statusLabels = { active: 'ACTIVE', endangered: 'ENDANGERED', cold: 'COLD CASE' };
-  el.innerHTML = list.map(function(c) {
-    var d = new Date(c.date_missing);
-    var dateStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    var yearsAgo = new Date().getFullYear() - d.getFullYear();
-    return '<div class="case-card" onclick="openCase(\'' + c.id + '\')">'
-      + (c.photo ? '<img class="case-photo" src="' + c.photo + '" alt="' + c.name + '">' : '<div class="case-photo-placeholder">👤</div>')
-      + '<div class="case-info">'
-      + '<div class="case-top">'
-      + '<div class="case-name">' + c.name + '</div>'
-      + '<span class="case-status ' + c.status + '">' + (statusLabels[c.status]||c.status.toUpperCase()) + '</span>'
-      + '</div>'
-      + '<div class="case-meta">'
-      + 'Age ' + c.age_missing
-      + '<span class="case-meta-dot"></span>'
-      + dateStr
-      + (yearsAgo > 0 ? '<span class="case-meta-dot"></span>' + yearsAgo + ' yr' + (yearsAgo!==1?'s':'') + ' ago' : '')
-      + '</div>'
-      + '<div class="case-location">📍 ' + c.city + ', ' + c.state + '</div>'
-      + '<div class="case-desc">' + (c.circumstances||'') + '</div>'
-      + '</div>'
-      + '</div>';
-  }).join('');
-}
-
-// Case detail
-function openCase(id) {
-  var c = null;
-  for (var i=0;i<cases.length;i++){ if(cases[i].id===id){ c=cases[i]; break; } }
-  if (!c) return;
-
-  // Update URL hash for sharing
-  window.location.hash = 'case-' + id;
-
-  var d = new Date(c.date_missing);
-  var dateStr = d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  var statusLabels = { active:'ACTIVE CASE', endangered:'ENDANGERED MISSING', cold:'COLD CASE' };
-  var statusColors = { active:'var(--red)', endangered:'var(--amber)', cold:'#93c5fd' };
-
-  document.getElementById('case-modal-content').innerHTML =
-    '<div class="modal-header">'
-    + '<div class="modal-header-left"><span class="modal-case-id">' + (c.case_number ? 'CASE #' + c.case_number : 'COMMUNITY SUBMISSION') + '</span></div>'
-    + '<button class="modal-close" onclick="closeCase()">✕ Close</button>'
-    + '</div>'
-    + (c.photo ? '<img class="modal-photo" src="' + c.photo + '" alt="' + c.name + '">' : '<div class="modal-photo-placeholder">👤</div>')
-    + '<div class="modal-body">'
-    + '<div class="modal-name">' + c.name + '</div>'
-    + '<div class="modal-status-row">'
-    + '<span class="case-status ' + c.status + '">' + (statusLabels[c.status]||c.status.toUpperCase()) + '</span>'
-    + '</div>'
-    + '<div class="modal-section-title">Case Details</div>'
-    + '<div class="modal-grid">'
-    + '<div><div class="modal-field-label">Date of Birth</div><div class="modal-field-val">' + (c.dob || 'Unknown') + '</div></div>'
-    + '<div><div class="modal-field-label">Age at Disappearance</div><div class="modal-field-val">' + c.age_missing + ' years old</div></div>'
-    + '<div><div class="modal-field-label">Date Last Seen</div><div class="modal-field-val">' + dateStr + '</div></div>'
-    + '<div><div class="modal-field-label">Last Known Location</div><div class="modal-field-val">' + c.city + ', ' + c.state + '</div></div>'
-    + (c.height ? '<div><div class="modal-field-label">Height</div><div class="modal-field-val">' + c.height + '</div></div>' : '')
-    + (c.weight ? '<div><div class="modal-field-label">Weight</div><div class="modal-field-val">' + c.weight + '</div></div>' : '')
-    + (c.hair ? '<div><div class="modal-field-label">Hair</div><div class="modal-field-val">' + c.hair + '</div></div>' : '')
-    + (c.eyes ? '<div><div class="modal-field-label">Eyes</div><div class="modal-field-val">' + c.eyes + '</div></div>' : '')
-    + '</div>'
-    + (c.distinguishing ? '<div class="modal-section-title" style="margin-top:1rem">Distinguishing Features</div><p class="modal-description">' + c.distinguishing + '</p>' : '')
-    + '<div class="modal-section-title">Circumstances</div>'
-    + '<p class="modal-description">' + (c.circumstances||'No additional information available.') + '</p>'
-    + '<div class="modal-section-title">Actions</div>'
-    + '<div class="modal-actions">'
-    + '<button class="action-btn primary" onclick="shareCase(\'' + c.id + '\')">🔗 Share This Case</button>'
-    + (c.namus_url ? '<a class="action-btn secondary" href="' + c.namus_url + '" target="_blank">🔎 View on NamUs</a>' : '')
-    + '</div>'
-    + '<div class="modal-section-title">Submit a Tip</div>'
-    + '<div class="tip-form">'
-    + '<p style="font-size:11px;color:var(--text3);margin-bottom:0.5rem;">Have information about this case? Submit anonymously below. <strong style="color:var(--amber)">If you have urgent information, call 911 immediately.</strong> Tips are reviewed and may be forwarded to appropriate contacts.</p>'
-    + '<textarea id="tip-text" placeholder="Describe what you know or saw..."></textarea>'
-    + '<button class="tip-submit" onclick="submitTip(\'' + c.id + '\',\'' + c.name + '\')">Submit Tip Anonymously</button>'
-    + '</div>'
-    + '<button class="action-btn danger" style="font-size:11px;margin-top:0.5rem;" onclick="requestRemoval(\'' + c.name + '\')">Request Case Removal</button>'
-    + '</div>'
-    + '<div class="mobile-close-bar"><button class="mobile-close-btn" onclick="closeCase()">✕ Close</button></div>';
-
-  document.getElementById('case-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeCase() {
-  document.getElementById('case-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-  history.pushState('', document.title, window.location.pathname);
-}
-
-function shareCase(id) {
-  var url = window.location.origin + window.location.pathname + '#case-' + id;
-  navigator.clipboard.writeText(url).then(function() {
-    var toast = document.getElementById('share-toast');
-    toast.classList.add('show');
-    setTimeout(function(){ toast.classList.remove('show'); }, 2500);
-  });
-}
-
-function submitTip(caseId, caseName) {
-  var text = document.getElementById('tip-text').value;
-  if (!text.trim()) return;
-  fetch('https://formspree.io/f/xojbdjbq', {
-    method:'POST',
-    body: JSON.stringify({ type:'TIP', case_id:caseId, case_name:caseName, tip:text }),
-    headers:{ 'Content-Type':'application/json', 'Accept':'application/json' }
-  }).then(function(){
-    document.getElementById('tip-text').value = '';
-    alert('Tip submitted. Thank you for helping.');
-  });
-}
-
-function requestRemoval(name) {
-  var reason = prompt('Please provide your reason for requesting removal of "' + name + '":\n\n(e.g. I am a family member and no longer wish this case to be listed, case has been resolved, information is inaccurate, etc.)');
-  if (!reason || !reason.trim()) return;
-  var relationship = prompt('What is your relationship to this person or case?');
-  if (!relationship || !relationship.trim()) return;
-  fetch('https://formspree.io/f/xojbdjbq', {
-    method:'POST',
-    body: JSON.stringify({ type:'REMOVAL_REQUEST', case_name:name, reason:reason, relationship:relationship }),
-    headers:{ 'Content-Type':'application/json', 'Accept':'application/json' }
-  }).then(function(){
-    alert('Removal request submitted. We will review and respond within 24-48 hours. Requests from verified family members are always honored.');
-  });
-}
-
-// Form
-function openForm() {
-  document.getElementById('form-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeForm() {
-  document.getElementById('form-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.getElementById('form-overlay').addEventListener('click', function(e){ if(e.target===this) closeForm(); });
-document.getElementById('case-overlay').addEventListener('click', function(e){ if(e.target===this) closeCase(); });
-
-document.getElementById('submit-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  var btn = document.getElementById('form-submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'Submitting...';
-  fetch('https://formspree.io/f/xojbdjbq', {
-    method:'POST', body: new FormData(this), headers:{'Accept':'application/json'}
-  }).then(function(r) {
-    if (r.ok) {
-      document.getElementById('submit-form').style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
-    } else {
-      btn.disabled = false;
-      btn.textContent = 'Submit Case for Review';
-      alert('Submission failed. Please try again.');
-    }
-  }).catch(function(){
-    btn.disabled = false;
-    btn.textContent = 'Submit Case for Review';
-    alert('Submission failed. Please try again.');
-  });
-});
-
-// Check for case hash on load
-function checkHash() {
-  var hash = window.location.hash;
-  if (hash && hash.startsWith('#case-')) {
-    var id = hash.replace('#case-','');
-    openCase(id);
-  }
-}
-
-document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeCase(); closeForm(); } });
-
-// Init
-var topoScript = document.createElement('script');
-topoScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js';
-topoScript.onload = function() {
-  initMap();
-  updateStats();
-  renderFeed();
-  buildTicker();
-  checkHash();
-};
-document.head.appendChild(topoScript);
-</script>
-</body>
-</html>
+];
