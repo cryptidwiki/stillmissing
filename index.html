@@ -273,6 +273,15 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 </div>
 </div><!-- end sticky-wrap -->
 
+<!-- DISCLAIMER -->
+<div style="background:rgba(245,158,11,0.07);border-bottom:1px solid rgba(245,158,11,0.2);padding:8px 1.5rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+  <span style="font-size:13px;">⚠️</span>
+  <p style="font-size:11px;color:rgba(241,245,249,0.55);line-height:1.5;flex:1;min-width:200px;">
+    <strong style="color:rgba(245,158,11,0.8);">Community Resource.</strong> StillMissing.us is maintained by one person. All case information is submitted by the community and may be incomplete or inaccurate. This is not an official law enforcement database. Always contact the listed agency directly to report tips or verify information. Cases are reviewed before publishing but we cannot guarantee accuracy.
+    <a href="mailto:stillmissingus@gmail.com" style="color:rgba(26,86,219,0.8);margin-left:4px;">Report an error.</a>
+  </p>
+</div>
+
 <!-- MAIN LAYOUT -->
 <div class="main-layout">
   <div class="map-section">
@@ -286,9 +295,9 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
     <div class="map-legend">
       <div class="legend-title">Case Density</div>
       <div class="legend-items">
-        <div class="legend-item"><div class="legend-swatch" style="background:rgba(26,86,219,0.25)"></div>Low</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:rgba(26,86,219,0.55)"></div>Med</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:rgba(26,86,219,0.85)"></div>High</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.25)"></div>Low</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.55)"></div>Med</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(239,68,68,0.88)"></div>High</div>
         <div class="legend-item"><div class="legend-swatch" style="background:#0d1525;border:1px solid #1a2540"></div>None</div>
       </div>
     </div>
@@ -632,9 +641,9 @@ function updateHeatmap() {
     if (isSelected) return 'rgba(245,158,11,0.2)';
     if (count === 0) return '#0d1525';
     var intensity = count / max;
-    if (intensity < 0.33) return 'rgba(26,86,219,0.25)';
-    if (intensity < 0.66) return 'rgba(26,86,219,0.55)';
-    return 'rgba(26,86,219,0.85)';
+    if (intensity < 0.33) return 'rgba(239,68,68,0.25)';
+    if (intensity < 0.66) return 'rgba(239,68,68,0.55)';
+    return 'rgba(239,68,68,0.88)';
   }).attr('stroke', function(d) {
     var abbr = fipsToState[d.id] || fipsToState[String(d.id).padStart(2,'0')];
     return (activeState && activeState === abbr) ? 'rgba(245,158,11,0.9)' : '#1a2540';
@@ -778,12 +787,16 @@ function submitTip(caseId, caseName) {
 }
 
 function requestRemoval(name) {
+  var reason = prompt('Please provide your reason for requesting removal of "' + name + '":\n\n(e.g. I am a family member and no longer wish this case to be listed, case has been resolved, information is inaccurate, etc.)');
+  if (!reason || !reason.trim()) return;
+  var relationship = prompt('What is your relationship to this person or case?');
+  if (!relationship || !relationship.trim()) return;
   fetch('https://formspree.io/f/xojbdjbq', {
     method:'POST',
-    body: JSON.stringify({ type:'REMOVAL_REQUEST', case_name:name }),
+    body: JSON.stringify({ type:'REMOVAL_REQUEST', case_name:name, reason:reason, relationship:relationship }),
     headers:{ 'Content-Type':'application/json', 'Accept':'application/json' }
   }).then(function(){
-    alert('Removal request submitted. We will process this within 24 hours.');
+    alert('Removal request submitted. We will review and respond within 24-48 hours. Requests from verified family members are always honored.');
   });
 }
 
