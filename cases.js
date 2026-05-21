@@ -11,7 +11,7 @@
 //   age_missing: 25,                 ← age when they went missing
 //   dob: "1990-01-15",              ← date of birth YYYY-MM-DD
 //   date_missing: "2024-03-10",     ← date last seen YYYY-MM-DD
-//   status: "active",               // "active" / "endangered" / "cold"
+//   status: "active",               // "active" / "endangered" / "cold" / "found-safe" / "found-deceased"
 //   city: "Chicago",
 //   state: "IL",                    ← 2-letter state code
 //   height: "5'8\"",
