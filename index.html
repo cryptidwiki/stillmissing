@@ -73,6 +73,7 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 .fbtn:hover { border-color: var(--text); color: var(--text); }
 .fbtn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
 .fbtn-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.filter-divider { color: var(--border2); font-size: 16px; margin: 0 4px; flex-shrink: 0; }
 .sort-wrap { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
 .sort-select { background: var(--navy3); border: 1px solid var(--border2); color: var(--text2); font-family: var(--sans); font-size: 12px; padding: 4px 10px; outline: none; cursor: pointer; border-radius: 4px; }
 
@@ -263,15 +264,18 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 
 <!-- FILTER BAR -->
 <div class="filter-bar">
-  <span class="filter-label">Filter:</span>
-  <button class="fbtn active" data-filter="all"><span class="fbtn-dot" style="background:var(--text)"></span>All Cases</button>
-  <button class="fbtn" data-filter="active"><span class="fbtn-dot" style="background:var(--red)"></span>Active</button>
-  <button class="fbtn" data-filter="endangered"><span class="fbtn-dot" style="background:var(--amber)"></span>Endangered</button>
-  <button class="fbtn" data-filter="cold"><span class="fbtn-dot" style="background:#93c5fd"></span>Cold Cases</button>
-  <button class="fbtn" data-filter="child"><span class="fbtn-dot" style="background:var(--teal)"></span>Children</button>
-  <button class="fbtn" data-filter="adult"><span class="fbtn-dot" style="background:#a78bfa"></span>Adults</button>
-  <button class="fbtn" data-filter="found-safe"><span class="fbtn-dot" style="background:#10b981"></span>Found Safe</button>
-  <button class="fbtn" data-filter="found-deceased"><span class="fbtn-dot" style="background:#9ca3af"></span>Found Deceased</button>
+  <span class="filter-label">Status:</span>
+  <button class="fbtn active" data-filter="all" data-type="status"><span class="fbtn-dot" style="background:var(--text)"></span>All</button>
+  <button class="fbtn" data-filter="active" data-type="status"><span class="fbtn-dot" style="background:var(--red)"></span>Active</button>
+  <button class="fbtn" data-filter="endangered" data-type="status"><span class="fbtn-dot" style="background:var(--amber)"></span>Endangered</button>
+  <button class="fbtn" data-filter="cold" data-type="status"><span class="fbtn-dot" style="background:#93c5fd"></span>Cold</button>
+  <button class="fbtn" data-filter="found-safe" data-type="status"><span class="fbtn-dot" style="background:#10b981"></span>Found Safe</button>
+  <button class="fbtn" data-filter="found-deceased" data-type="status"><span class="fbtn-dot" style="background:#9ca3af"></span>Found Deceased</button>
+  <span class="filter-divider">|</span>
+  <span class="filter-label">Age:</span>
+  <button class="fbtn active" data-filter="all" data-type="age"><span class="fbtn-dot" style="background:var(--text)"></span>All Ages</button>
+  <button class="fbtn" data-filter="child" data-type="age"><span class="fbtn-dot" style="background:var(--teal)"></span>Children</button>
+  <button class="fbtn" data-filter="adult" data-type="age"><span class="fbtn-dot" style="background:#a78bfa"></span>Adults</button>
   <div class="sort-wrap">
     <select class="sort-select" id="sort-select">
       <option value="newest">Newest First</option>
@@ -478,6 +482,7 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 <script src="cases.js"></script>
 <script>
 var activeFilter = 'all';
+var activeAgeFilter = 'all';
 var activeState = null;
 var searchQuery = '';
 var sortMode = 'newest';
@@ -545,8 +550,8 @@ function getFiltered() {
   else if (activeFilter === 'cold') list = list.filter(function(c){ return c.status === 'cold'; });
   else if (activeFilter === 'found-safe') list = list.filter(function(c){ return c.status === 'found-safe'; });
   else if (activeFilter === 'found-deceased') list = list.filter(function(c){ return c.status === 'found-deceased'; });
-  else if (activeFilter === 'child') list = list.filter(function(c){ return c.age_missing <= 17; });
-  else if (activeFilter === 'adult') list = list.filter(function(c){ return c.age_missing >= 18; });
+  if (activeAgeFilter === 'child') list = list.filter(function(c){ return c.age_missing <= 17; });
+  else if (activeAgeFilter === 'adult') list = list.filter(function(c){ return c.age_missing >= 18; });
   if (activeState) list = list.filter(function(c){ return c.state === activeState; });
   if (searchQuery) {
     var q = searchQuery.toLowerCase();
@@ -570,8 +575,15 @@ function getFiltered() {
 // Filter buttons
 document.querySelectorAll('.fbtn').forEach(function(btn) {
   btn.addEventListener('click', function() {
-    activeFilter = this.getAttribute('data-filter');
-    document.querySelectorAll('.fbtn').forEach(function(b){ b.classList.remove('active'); });
+    var type = this.getAttribute('data-type');
+    var filter = this.getAttribute('data-filter');
+    if (type === 'status') {
+      activeFilter = filter;
+      document.querySelectorAll('.fbtn[data-type="status"]').forEach(function(b){ b.classList.remove('active'); });
+    } else {
+      activeAgeFilter = filter;
+      document.querySelectorAll('.fbtn[data-type="age"]').forEach(function(b){ b.classList.remove('active'); });
+    }
     this.classList.add('active');
     updateHeatmap();
     renderFeed();
