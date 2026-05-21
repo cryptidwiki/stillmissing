@@ -42,7 +42,7 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 .alert-bar { background: var(--blue); padding: 7px 1.5rem; display: flex; align-items: center; gap: 1rem; overflow: hidden; }
 .alert-bar-label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: #fff; white-space: nowrap; flex-shrink: 0; background: rgba(0,0,0,0.2); padding: 2px 8px; font-family: var(--mono); }
 .alert-ticker { display: flex; overflow: hidden; flex: 1; }
-.alert-text { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); white-space: nowrap; animation: ticker 35s linear infinite; letter-spacing: 0.03em; }
+.alert-text { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); white-space: nowrap; animation: ticker 90s linear infinite; letter-spacing: 0.03em; }
 @keyframes ticker { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
 .alert-time { font-size: 10px; font-family: var(--mono); color: rgba(255,255,255,0.6); white-space: nowrap; flex-shrink: 0; }
 
@@ -698,13 +698,19 @@ function updateStats() {
 
 // Alert ticker
 function buildTicker() {
-  var active = cases.filter(function(c){ return c.status === 'active' || c.status === 'endangered'; });
+  var active = cases
+    .filter(function(c){ return c.status === 'active' || c.status === 'endangered'; })
+    .sort(function(a,b){ return new Date(b.date_missing) - new Date(a.date_missing); })
+    .slice(0, 10); // Only show 10 most recent
+  if (!active.length) return;
   var text = active.map(function(c){
-    return 'MISSING: ' + c.name + ' — ' + c.city + ', ' + c.state + ' — Last seen ' + new Date(c.date_missing).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  }).join(' &nbsp;•&nbsp; ') + ' &nbsp;•&nbsp; ';
+    var d = new Date(c.date_missing);
+    var dateStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    return 'MISSING: ' + c.name + ' — ' + c.city + ', WV — Last seen ' + dateStr;
+  }).join(' &nbsp;&nbsp;•&nbsp;&nbsp; ') + ' &nbsp;&nbsp;•&nbsp;&nbsp; ';
   var doubled = text + text;
   document.getElementById('alert-text').innerHTML = doubled;
-  document.getElementById('alert-text2').innerHTML = doubled;
+  document.getElementById('alert-text2').innerHTML = '';
 }
 
 // Filter
