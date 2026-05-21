@@ -235,7 +235,17 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
   .footer-links { display: none; }
 }
 
-/* BOTTOM SECTIONS */
+/* SHARE GRID */
+.share-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem; }
+.share-btn { font-family: var(--sans); font-size: 12px; font-weight: 600; padding: 10px 8px; border-radius: 4px; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border2); background: var(--navy3); color: var(--text); text-align: center; }
+.share-btn:hover { transform: translateY(-1px); }
+.share-btn.native { background: var(--blue); border-color: var(--blue); color: #fff; }
+.share-btn.facebook { background: #1877f2; border-color: #1877f2; color: #fff; }
+.share-btn.twitter { background: #000; border-color: #333; color: #fff; }
+.share-btn.sms { background: #10b981; border-color: #10b981; color: #fff; }
+.share-btn.copy-link { background: var(--navy4); border-color: var(--border2); color: var(--text2); }
+.share-btn.caption { background: var(--navy4); border-color: var(--border2); color: var(--text2); }
+@media (max-width: 480px) { .share-grid { grid-template-columns: 1fr 1fr; } }
 .bottom-sections { background: var(--navy2); border-top: 1px solid var(--border2); }
 
 /* STATS BAR */
@@ -945,9 +955,17 @@ function openCase(id) {
     + (c.distinguishing ? '<div class="modal-section-title" style="margin-top:1rem">Distinguishing Features</div><p class="modal-description">' + c.distinguishing + '</p>' : '')
     + '<div class="modal-section-title">Circumstances</div>'
     + '<p class="modal-description">' + (c.circumstances||'No additional information available.') + '</p>'
-    + '<div class="modal-section-title">Actions</div>'
+    + '<div class="modal-section-title">Share This Case</div>'
+    + '<div class="share-grid">'
+    + '<button class="share-btn native" onclick="nativeShare(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">📱 Share</button>'
+    + '<button class="share-btn facebook" onclick="shareFacebook(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">📘 Facebook</button>'
+    + '<button class="share-btn twitter" onclick="shareTwitter(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">🐦 X / Twitter</button>'
+    + '<button class="share-btn sms" onclick="shareSMS(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">💬 Text</button>'
+    + '<button class="share-btn copy-link" onclick="shareCase(\'' + c.id + '\')">🔗 Copy Link</button>'
+    + '<button class="share-btn caption" onclick="copyCaption(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">📋 Copy Caption</button>'
+    + '</div>'
+    + '<div class="modal-section-title" style="margin-top:1rem;">Other Actions</div>'
     + '<div class="modal-actions">'
-    + '<button class="action-btn primary" onclick="shareCase(\'' + c.id + '\')">🔗 Share This Case</button>'
     + '<button class="action-btn secondary" onclick="printFlyer(\'' + c.id + '\')">🖨️ Print Flyer</button>'
     + (c.namus_url ? '<a class="action-btn secondary" href="' + c.namus_url + '" target="_blank">🔎 View on NamUs</a>' : '')
     + '</div>'
@@ -971,13 +989,70 @@ function closeCase() {
   history.pushState('', document.title, window.location.pathname);
 }
 
-function shareCase(id) {
-  var url = window.location.origin + window.location.pathname + '#case-' + id;
-  navigator.clipboard.writeText(url).then(function() {
-    var toast = document.getElementById('share-toast');
-    toast.classList.add('show');
-    setTimeout(function(){ toast.classList.remove('show'); }, 2500);
+// Share functions
+function getCaseUrl(id) {
+  return window.location.origin + window.location.pathname + '#case-' + id;
+}
+
+function getCaption(name, city, state, date_missing) {
+  var d = new Date(date_missing);
+  var dateStr = d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  return 'MISSING: ' + name + ', last seen ' + dateStr + ' in ' + city + ', ' + state + '. If you have any information please call 911 immediately.';
+}
+
+function nativeShare(id, name, city, state, date_missing) {
+  var url = getCaseUrl(id);
+  var text = getCaption(name, city, state, date_missing);
+  if (navigator.share) {
+    navigator.share({ title: 'MISSING: ' + name, text: text, url: url });
+  } else {
+    // Fallback — copy to clipboard
+    navigator.clipboard.writeText(text + ' ' + url).then(function(){
+      showToast('📋 Caption + link copied to clipboard');
+    });
+  }
+}
+
+function shareFacebook(id, name, city, state, date_missing) {
+  var url = getCaseUrl(id);
+  var caption = getCaption(name, city, state, date_missing);
+  // Copy caption first then open Facebook
+  navigator.clipboard.writeText(caption).then(function(){
+    showToast('📋 Caption copied — paste it into your Facebook post!');
+    setTimeout(function(){
+      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
+    }, 500);
   });
+}
+
+function shareTwitter(id, name, city, state, date_missing) {
+  var url = getCaseUrl(id);
+  var d = new Date(date_missing);
+  var dateStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  // Keep under 280 chars
+  var tweet = '🚨 MISSING: ' + name + ', last seen ' + dateStr + ' in ' + city + ', ' + state + '. Call 911 if you have info. ' + url + ' #Missing #StillMissing';
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweet), '_blank');
+}
+
+function shareSMS(id, name, city, state, date_missing) {
+  var url = getCaseUrl(id);
+  var caption = getCaption(name, city, state, date_missing) + ' ' + url;
+  window.open('sms:?body=' + encodeURIComponent(caption));
+}
+
+function copyCaption(id, name, city, state, date_missing) {
+  var url = getCaseUrl(id);
+  var caption = getCaption(name, city, state, date_missing) + '\n\n' + url;
+  navigator.clipboard.writeText(caption).then(function(){
+    showToast('📋 Caption copied — ready to paste anywhere!');
+  });
+}
+
+function showToast(msg) {
+  var toast = document.getElementById('share-toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(function(){ toast.classList.remove('show'); }, 3000);
 }
 
 function submitTip(caseId, caseName) {
@@ -1004,6 +1079,12 @@ function requestRemoval(name) {
     headers:{ 'Content-Type':'application/json', 'Accept':'application/json' }
   }).then(function(){
     alert('Removal request submitted. We will review and respond within 24-48 hours. Requests from verified family members are always honored.');
+  });
+}
+
+function shareCase(id) {
+  navigator.clipboard.writeText(getCaseUrl(id)).then(function(){
+    showToast('🔗 Case link copied to clipboard');
   });
 }
 
