@@ -434,10 +434,6 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
           <div class="form-note">If this person is listed on NamUs or another official database, please include the case number.</div>
         </div>
         <div class="form-field">
-          <label class="form-label">Law Enforcement Contact</label>
-          <input type="text" name="le_contact" class="form-input" placeholder="Investigating agency and phone number">
-        </div>
-        <div class="form-field">
           <label class="form-label">Photo URL</label>
           <input type="url" name="photo_url" class="form-input" placeholder="Link to a photo (imgur, Google Drive, etc.)">
         </div>
@@ -747,12 +743,11 @@ function openCase(id) {
     + '<div class="modal-section-title">Actions</div>'
     + '<div class="modal-actions">'
     + '<button class="action-btn primary" onclick="shareCase(\'' + c.id + '\')">🔗 Share This Case</button>'
-    + (c.le_contact ? '<a class="action-btn secondary" href="tel:' + c.le_contact + '">📞 Contact Law Enforcement</a>' : '')
     + (c.namus_url ? '<a class="action-btn secondary" href="' + c.namus_url + '" target="_blank">🔎 View on NamUs</a>' : '')
     + '</div>'
     + '<div class="modal-section-title">Submit a Tip</div>'
     + '<div class="tip-form">'
-    + '<p style="font-size:11px;color:var(--text3);margin-bottom:0.5rem;">Have information about this case? Submit anonymously. Tips are reviewed and forwarded to the appropriate contacts.</p>'
+    + '<p style="font-size:11px;color:var(--text3);margin-bottom:0.5rem;">Have information about this case? Submit anonymously below. <strong style="color:var(--amber)">If you have urgent information, call 911 immediately.</strong> Tips are reviewed and may be forwarded to appropriate contacts.</p>'
     + '<textarea id="tip-text" placeholder="Describe what you know or saw..."></textarea>'
     + '<button class="tip-submit" onclick="submitTip(\'' + c.id + '\',\'' + c.name + '\')">Submit Tip Anonymously</button>'
     + '</div>'
