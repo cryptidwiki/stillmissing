@@ -238,13 +238,10 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 /* SHARE GRID */
 .share-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem; }
 .share-btn { font-family: var(--sans); font-size: 12px; font-weight: 600; padding: 10px 8px; border-radius: 4px; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border2); background: var(--navy3); color: var(--text); text-align: center; }
-.share-btn:hover { transform: translateY(-1px); }
-.share-btn.native { background: var(--blue); border-color: var(--blue); color: #fff; }
-.share-btn.facebook { background: #1877f2; border-color: #1877f2; color: #fff; }
-.share-btn.twitter { background: #000; border-color: #333; color: #fff; }
-.share-btn.sms { background: #10b981; border-color: #10b981; color: #fff; }
-.share-btn.copy-link { background: var(--navy4); border-color: var(--border2); color: var(--text2); }
+.share-btn:hover { transform: translateY(-1px); background: var(--navy4); }
+.share-btn.copy-link { background: var(--blue); border-color: var(--blue); color: #fff; }
 .share-btn.caption { background: var(--navy4); border-color: var(--border2); color: var(--text2); }
+.share-btn.secondary { background: var(--navy4); border-color: var(--border2); color: var(--text2); }
 @media (max-width: 480px) { .share-grid { grid-template-columns: 1fr 1fr; } }
 .bottom-sections { background: var(--navy2); border-top: 1px solid var(--border2); }
 
@@ -963,17 +960,11 @@ function openCase(id) {
     + '<p class="modal-description">' + (c.circumstances||'No additional information available.') + '</p>'
     + '<div class="modal-section-title">Share This Case</div>'
     + '<div class="share-grid">'
-    + '<button class="share-btn native" onclick="nativeShare(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">📱 Share</button>'
-    + '<button class="share-btn facebook" onclick="shareFacebook(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">📘 Facebook</button>'
-    + '<button class="share-btn twitter" onclick="shareTwitter(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">🐦 X / Twitter</button>'
-    + '<button class="share-btn sms" onclick="shareSMS(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">💬 Text</button>'
     + '<button class="share-btn copy-link" onclick="shareCase(\'' + c.id + '\')">🔗 Copy Link</button>'
     + '<button class="share-btn caption" onclick="copyCaption(\'' + c.id + '\',\'' + c.name.replace(/'/g,"\\'") + '\',\'' + c.city + '\',\'' + c.state + '\',\'' + c.date_missing + '\')">📋 Copy Caption</button>'
+    + '<button class="share-btn secondary" onclick="printFlyer(\'' + c.id + '\')">🖨️ Print Flyer</button>'
     + '</div>'
-    + '<div class="modal-section-title" style="margin-top:1rem;">Other Actions</div>'
-    + '<div class="modal-actions">'
-    + '<button class="action-btn secondary" onclick="printFlyer(\'' + c.id + '\')">🖨️ Print Flyer</button>'
-    + (c.namus_url ? '<a class="action-btn secondary" href="' + c.namus_url + '" target="_blank">🔎 View on NamUs</a>' : '')
+    + (c.namus_url ? '<div class="modal-actions" style="margin-top:0.75rem;"><a class="action-btn secondary" href="' + c.namus_url + '" target="_blank">🔎 View on NamUs</a></div>' : '')
     + '</div>'
     + '<div class="modal-section-title">Submit a Tip</div>'
     + '<div class="tip-form">'
