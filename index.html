@@ -228,6 +228,88 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
   .sort-wrap { display: none; }
   .mobile-close-bar { display: flex; }
   .disclaimer-bar { flex-direction: column; gap: 0.25rem; }
+  .stats-bar { grid-template-columns: 1fr 1fr; }
+  .stat-block { border-right: none; border-bottom: 1px solid var(--border); }
+  .mission-resources { grid-template-columns: 1fr; }
+  .mission-section { border-right: none; border-bottom: 1px solid var(--border); }
+  .footer-links { display: none; }
+}
+
+/* BOTTOM SECTIONS */
+.bottom-sections { background: var(--navy2); border-top: 1px solid var(--border2); }
+
+/* STATS BAR */
+.stats-bar { display: grid; grid-template-columns: repeat(4,1fr); border-bottom: 1px solid var(--border); }
+.stat-block { padding: 1.25rem 1.5rem; border-right: 1px solid var(--border); text-align: center; }
+.stat-block:last-child { border-right: none; }
+.stat-block-num { font-family: var(--mono); font-size: 32px; font-weight: 500; line-height: 1; margin-bottom: 4px; }
+.stat-block-num.red { color: var(--red); }
+.stat-block-num.amber { color: var(--amber); }
+.stat-block-num.blue { color: #93c5fd; }
+.stat-block-num.green { color: #10b981; }
+.stat-block-label { font-size: 10px; letter-spacing: 0.15em; color: var(--text3); text-transform: uppercase; }
+
+/* MISSION + RESOURCES */
+.mission-resources { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
+.mission-section { padding: 2rem 1.5rem; border-right: 1px solid var(--border); }
+.resources-section { padding: 2rem 1.5rem; }
+.section-tag { font-size: 9px; letter-spacing: 0.25em; color: var(--blue); font-family: var(--mono); text-transform: uppercase; margin-bottom: 8px; }
+.section-title { font-family: var(--serif); font-size: 22px; margin-bottom: 0.75rem; line-height: 1.2; }
+.section-text { font-size: 12px; line-height: 1.8; color: var(--text2); margin-bottom: 0.75rem; }
+.mission-points { list-style: none; margin-top: 0.75rem; }
+.mission-points li { font-size: 12px; color: var(--text2); padding: 5px 0 5px 1rem; border-bottom: 1px solid var(--border); position: relative; line-height: 1.5; }
+.mission-points li::before { content: '→'; position: absolute; left: 0; color: var(--blue); font-size: 10px; }
+.mission-points li:last-child { border-bottom: none; }
+.resource-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; transition: all 0.12s; margin-bottom: 0.5rem; }
+.resource-link:hover { border-color: var(--blue); background: var(--blue-soft); }
+.resource-icon { font-size: 20px; flex-shrink: 0; }
+.resource-info { flex: 1; }
+.resource-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.resource-desc { font-size: 11px; color: var(--text3); }
+.resource-arrow { color: var(--text3); font-size: 12px; }
+
+/* FOOTER */
+.site-footer { padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: var(--text3); letter-spacing: 0.08em; flex-wrap: wrap; gap: 0.5rem; border-top: 1px solid var(--border); }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-link { color: var(--text3); text-decoration: none; font-size: 10px; }
+.footer-link:hover { color: var(--text); }
+
+/* PRINT FLYER */
+.flyer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; padding: 1.5rem; }
+.flyer-overlay.open { display: flex; }
+.flyer-container { background: white; color: #111; width: min(600px,100%); max-height: 90vh; overflow-y: auto; border-radius: 4px; }
+.flyer-header-bar { background: #1a1a2e; color: white; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; }
+.flyer-header-title { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; }
+.flyer-close { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; font-size: 11px; padding: 4px 12px; cursor: pointer; border-radius: 3px; }
+.flyer-print-btn { background: #1a56db; border: none; color: white; font-size: 12px; font-weight: 600; padding: 6px 16px; cursor: pointer; border-radius: 3px; }
+.flyer-content { padding: 2rem; }
+.flyer-top { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; align-items: flex-start; }
+.flyer-photo { width: 160px; height: 200px; object-fit: cover; object-position: top; flex-shrink: 0; border: 2px solid #ddd; }
+.flyer-photo-placeholder { width: 160px; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 48px; color: #ccc; flex-shrink: 0; border: 2px solid #ddd; }
+.flyer-headline { flex: 1; }
+.flyer-missing-label { font-size: 11px; font-weight: 700; letter-spacing: 0.3em; color: #cc0000; margin-bottom: 4px; }
+.flyer-name { font-size: 28px; font-weight: 700; color: #111; line-height: 1.1; margin-bottom: 8px; }
+.flyer-status-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 3px; letter-spacing: 0.1em; margin-bottom: 12px; }
+.flyer-status-badge.found-deceased { background: #f0f0f0; color: #555; }
+.flyer-status-badge.found-safe { background: #d1fae5; color: #065f46; }
+.flyer-status-badge.active { background: #fee2e2; color: #cc0000; }
+.flyer-status-badge.endangered { background: #fef3c7; color: #92400e; }
+.flyer-status-badge.cold { background: #dbeafe; color: #1e40af; }
+.flyer-detail-row { display: flex; gap: 0.5rem; margin-bottom: 4px; font-size: 12px; }
+.flyer-detail-label { font-weight: 600; color: #555; min-width: 80px; }
+.flyer-detail-val { color: #111; }
+.flyer-section-title { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: #666; text-transform: uppercase; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin: 1rem 0 0.5rem; }
+.flyer-circumstances { font-size: 12px; line-height: 1.7; color: #333; }
+.flyer-footer { margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #cc0000; display: flex; align-items: center; justify-content: space-between; }
+.flyer-footer-left { font-size: 10px; color: #666; line-height: 1.5; }
+.flyer-footer-site { font-size: 13px; font-weight: 700; color: #1a56db; }
+.flyer-tip-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: 3px; padding: 8px 12px; margin-top: 1rem; font-size: 11px; color: #856404; text-align: center; font-weight: 600; }
+
+@media print {
+  body * { visibility: hidden; }
+  .flyer-content, .flyer-content * { visibility: visible; }
+  .flyer-content { position: fixed; left: 0; top: 0; width: 100%; }
+  .flyer-header-bar { display: none; }
 }
 </style>
 </head>
@@ -477,6 +559,107 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
 </div>
 
 <div class="share-toast" id="share-toast">🔗 Case link copied to clipboard</div>
+
+<!-- FLYER OVERLAY -->
+<div class="flyer-overlay" id="flyer-overlay">
+  <div class="flyer-container" id="flyer-container">
+    <div class="flyer-header-bar">
+      <span class="flyer-header-title">MISSING PERSON FLYER — STILLMISSING.US</span>
+      <div style="display:flex;gap:8px;">
+        <button class="flyer-print-btn" onclick="window.print()">🖨️ Print</button>
+        <button class="flyer-close" onclick="closeFlyer()">✕ Close</button>
+      </div>
+    </div>
+    <div class="flyer-content" id="flyer-content"></div>
+  </div>
+</div>
+
+<!-- BOTTOM SECTIONS -->
+<div class="bottom-sections">
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-block">
+      <div class="stat-block-num red" id="stat-active">0</div>
+      <div class="stat-block-label">Active Cases</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-block-num amber" id="stat-cold">0</div>
+      <div class="stat-block-label">Cold Cases</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-block-num blue" id="stat-states">0</div>
+      <div class="stat-block-label">States Represented</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-block-num green" id="stat-found">0</div>
+      <div class="stat-block-label">Cases Resolved</div>
+    </div>
+  </div>
+
+  <!-- MISSION + RESOURCES -->
+  <div class="mission-resources">
+    <div class="mission-section">
+      <div class="section-tag">// Our Mission //</div>
+      <div class="section-title">Built to Help Bring People Home</div>
+      <p class="section-text">StillMissing.us is a free, community-powered missing persons database built and maintained by one person. It exists to give families a place to be heard, give researchers a tool to organize cases, and give communities a way to visualize where people are going missing.</p>
+      <p class="section-text">This is not an official law enforcement database. It complements existing systems — it does not replace them. Every case is reviewed before publishing. Families may request removal at any time.</p>
+      <ul class="mission-points">
+        <li>All case information is submitted by the community and verified before publishing</li>
+        <li>If you have urgent information about a missing person, call 911 immediately</li>
+        <li>Families can submit, update, or request removal of any case at any time</li>
+        <li>Only publicly available information is displayed — no private data</li>
+        <li>The site is free to use and will always remain free</li>
+      </ul>
+    </div>
+    <div class="resources-section">
+      <div class="section-tag">// Official Resources //</div>
+      <div class="section-title">Find Help From Official Sources</div>
+      <p class="section-text">These official databases are the first place you should go for missing persons information. StillMissing.us does not pull from or integrate with these systems — we encourage you to cross-reference any case here with official sources.</p>
+      <a href="https://www.namus.gov" target="_blank" class="resource-link">
+        <span class="resource-icon">🏛️</span>
+        <div class="resource-info">
+          <div class="resource-name">NamUs — National Missing & Unidentified</div>
+          <div class="resource-desc">The official federal database for missing persons and unidentified remains</div>
+        </div>
+        <span class="resource-arrow">→</span>
+      </a>
+      <a href="https://www.ncmec.org" target="_blank" class="resource-link">
+        <span class="resource-icon">👶</span>
+        <div class="resource-info">
+          <div class="resource-name">NCMEC — National Center for Missing & Exploited Children</div>
+          <div class="resource-desc">The leading nonprofit for missing and exploited children in the US</div>
+        </div>
+        <span class="resource-arrow">→</span>
+      </a>
+      <a href="https://www.fbi.gov/investigate/violent-crime/missing-persons" target="_blank" class="resource-link">
+        <span class="resource-icon">🔎</span>
+        <div class="resource-info">
+          <div class="resource-name">FBI Missing Persons</div>
+          <div class="resource-desc">FBI resources and database for missing persons cases</div>
+        </div>
+        <span class="resource-arrow">→</span>
+      </a>
+      <a href="https://www.missingkids.org/gethelpnow/isyourchildmissing" target="_blank" class="resource-link">
+        <span class="resource-icon">🚨</span>
+        <div class="resource-info">
+          <div class="resource-name">Is Your Child Missing? — NCMEC Hotline</div>
+          <div class="resource-desc">Call 1-800-THE-LOST (1-800-843-5678) — 24 hours a day</div>
+        </div>
+        <span class="resource-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="site-footer">
+    <span>© 2026 STILLMISSING.US — COMMUNITY MISSING PERSONS DATABASE</span>
+    <div class="footer-links">
+      <span style="color:var(--text3);font-size:10px;">If you have urgent information about a missing person — call 911</span>
+    </div>
+  </div>
+
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="cases.js"></script>
@@ -765,6 +948,7 @@ function openCase(id) {
     + '<div class="modal-section-title">Actions</div>'
     + '<div class="modal-actions">'
     + '<button class="action-btn primary" onclick="shareCase(\'' + c.id + '\')">🔗 Share This Case</button>'
+    + '<button class="action-btn secondary" onclick="printFlyer(\'' + c.id + '\')">🖨️ Print Flyer</button>'
     + (c.namus_url ? '<a class="action-btn secondary" href="' + c.namus_url + '" target="_blank">🔎 View on NamUs</a>' : '')
     + '</div>'
     + '<div class="modal-section-title">Submit a Tip</div>'
@@ -823,8 +1007,59 @@ function requestRemoval(name) {
   });
 }
 
-// Form
-function openForm() {
+// Stats bar
+function updateBottomStats() {
+  var active = cases.filter(function(c){ return c.status==='active'||c.status==='endangered'; }).length;
+  var cold = cases.filter(function(c){ return c.status==='cold'; }).length;
+  var states = new Set(cases.map(function(c){ return c.state; })).size;
+  var found = cases.filter(function(c){ return c.status==='found-safe'||c.status==='found-deceased'; }).length;
+  document.getElementById('stat-active').textContent = active;
+  document.getElementById('stat-cold').textContent = cold;
+  document.getElementById('stat-states').textContent = states;
+  document.getElementById('stat-found').textContent = found;
+}
+
+// Print flyer
+function printFlyer(id) {
+  var c = null;
+  for (var i=0;i<cases.length;i++){ if(cases[i].id===id){ c=cases[i]; break; } }
+  if (!c) return;
+  var d = new Date(c.date_missing);
+  var dateStr = d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var statusLabels = { active:'ACTIVE — MISSING', endangered:'ENDANGERED MISSING', cold:'COLD CASE', 'found-safe':'FOUND — SAFE', 'found-deceased':'FOUND — DECEASED' };
+  document.getElementById('flyer-content').innerHTML =
+    '<div class="flyer-top">'
+    + (c.photo ? '<img class="flyer-photo" src="' + c.photo + '" alt="' + c.name + '">' : '<div class="flyer-photo-placeholder">👤</div>')
+    + '<div class="flyer-headline">'
+    + '<div class="flyer-missing-label">MISSING PERSON</div>'
+    + '<div class="flyer-name">' + c.name + '</div>'
+    + '<span class="flyer-status-badge ' + c.status + '">' + (statusLabels[c.status]||c.status.toUpperCase()) + '</span>'
+    + '<div class="flyer-detail-row"><span class="flyer-detail-label">Last Seen:</span><span class="flyer-detail-val">' + dateStr + '</span></div>'
+    + '<div class="flyer-detail-row"><span class="flyer-detail-label">Location:</span><span class="flyer-detail-val">' + c.city + ', ' + c.state + '</span></div>'
+    + '<div class="flyer-detail-row"><span class="flyer-detail-label">Age:</span><span class="flyer-detail-val">' + c.age_missing + ' years old</span></div>'
+    + (c.height ? '<div class="flyer-detail-row"><span class="flyer-detail-label">Height:</span><span class="flyer-detail-val">' + c.height + '</span></div>' : '')
+    + (c.weight ? '<div class="flyer-detail-row"><span class="flyer-detail-label">Weight:</span><span class="flyer-detail-val">' + c.weight + '</span></div>' : '')
+    + (c.hair ? '<div class="flyer-detail-row"><span class="flyer-detail-label">Hair:</span><span class="flyer-detail-val">' + c.hair + '</span></div>' : '')
+    + (c.eyes ? '<div class="flyer-detail-row"><span class="flyer-detail-label">Eyes:</span><span class="flyer-detail-val">' + c.eyes + '</span></div>' : '')
+    + '</div></div>'
+    + (c.distinguishing ? '<div class="flyer-section-title">Distinguishing Features</div><p class="flyer-circumstances">' + c.distinguishing + '</p>' : '')
+    + '<div class="flyer-section-title">Circumstances</div>'
+    + '<p class="flyer-circumstances">' + (c.circumstances||'') + '</p>'
+    + (c.case_number ? '<div class="flyer-section-title">Official Case Number</div><p class="flyer-circumstances">' + c.case_number + '</p>' : '')
+    + '<div class="flyer-tip-box">⚠️ IF YOU HAVE INFORMATION — CALL 911 IMMEDIATELY</div>'
+    + '<div class="flyer-footer">'
+    + '<div class="flyer-footer-left">This flyer was generated by<br><span class="flyer-footer-site">StillMissing.us</span><br>A free community missing persons database</div>'
+    + (c.case_number ? '<div style="font-size:10px;color:#666;">Case: ' + c.case_number + '</div>' : '')
+    + '</div>';
+  document.getElementById('flyer-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFlyer() {
+  document.getElementById('flyer-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('flyer-overlay').addEventListener('click', function(e){ if(e.target===this) closeFlyer(); });
   document.getElementById('form-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -875,6 +1110,7 @@ topoScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson
 topoScript.onload = function() {
   initMap();
   updateStats();
+  updateBottomStats();
   renderFeed();
   buildTicker();
   checkHash();
