@@ -1141,6 +1141,9 @@ function closeFlyer() {
   document.body.style.overflow = '';
 }
 document.getElementById('flyer-overlay').addEventListener('click', function(e){ if(e.target===this) closeFlyer(); });
+
+// Form
+function openForm() {
   document.getElementById('form-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
