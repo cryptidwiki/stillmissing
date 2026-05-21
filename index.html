@@ -568,7 +568,13 @@ body { background: var(--navy); color: var(--text); font-family: var(--sans); mi
   </div>
 </div>
 
-<div class="share-toast" id="share-toast">🔗 Case link copied to clipboard</div>
+<div class="share-toast" id="share-toast"></div>
+
+<!-- PHOTO LIGHTBOX -->
+<div id="photo-lightbox" onclick="closePhotoLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:3000;align-items:center;justify-content:center;cursor:zoom-out;">
+  <img id="photo-lightbox-img" src="" style="max-width:92vw;max-height:92vh;object-fit:contain;">
+  <div style="position:absolute;top:1rem;right:1.5rem;color:rgba(255,255,255,0.5);font-size:11px;font-family:var(--mono);">CLICK ANYWHERE TO CLOSE</div>
+</div>
 
 <!-- FLYER OVERLAY -->
 <div class="flyer-overlay" id="flyer-overlay">
@@ -935,7 +941,7 @@ function openCase(id) {
     + '<div class="modal-header-left"><span class="modal-case-id">' + (c.case_number ? 'CASE #' + c.case_number : 'COMMUNITY SUBMISSION') + '</span></div>'
     + '<button class="modal-close" onclick="closeCase()">✕ Close</button>'
     + '</div>'
-    + (c.photo ? '<img class="modal-photo" src="' + c.photo + '" alt="' + c.name + '">' : '<div class="modal-photo-placeholder">👤</div>')
+    + (c.photo ? '<img class="modal-photo" src="' + c.photo + '" alt="' + c.name + '" onclick="openPhotoLightbox(\'' + c.photo + '\')" style="cursor:zoom-in;" title="Click to expand">' : '<div class="modal-photo-placeholder">👤</div>')
     + '<div class="modal-body">'
     + '<div class="modal-name">' + c.name + '</div>'
     + '<div class="modal-status-row">'
@@ -1000,37 +1006,53 @@ function getCaption(name, city, state, date_missing) {
   return 'MISSING: ' + name + ', last seen ' + dateStr + ' in ' + city + ', ' + state + '. If you have any information please call 911 immediately.';
 }
 
+function copyToClipboard(text, successMsg) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function(){
+      showToast(successMsg);
+    }).catch(function(){ fallbackCopy(text, successMsg); });
+  } else {
+    fallbackCopy(text, successMsg);
+  }
+}
+
+function fallbackCopy(text, successMsg) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); showToast(successMsg); }
+  catch(e) { showToast('Please copy manually'); }
+  document.body.removeChild(ta);
+}
+
 function nativeShare(id, name, city, state, date_missing) {
   var url = getCaseUrl(id);
   var text = getCaption(name, city, state, date_missing);
   if (navigator.share) {
     navigator.share({ title: 'MISSING: ' + name, text: text, url: url });
   } else {
-    // Fallback — copy to clipboard
-    navigator.clipboard.writeText(text + ' ' + url).then(function(){
-      showToast('📋 Caption + link copied to clipboard');
-    });
+    copyToClipboard(text + ' ' + url, '📋 Caption + link copied!');
   }
 }
 
 function shareFacebook(id, name, city, state, date_missing) {
   var url = getCaseUrl(id);
   var caption = getCaption(name, city, state, date_missing);
-  // Copy caption first then open Facebook
-  navigator.clipboard.writeText(caption).then(function(){
-    showToast('📋 Caption copied — paste it into your Facebook post!');
-    setTimeout(function(){
-      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
-    }, 500);
-  });
+  copyToClipboard(caption, '📋 Caption copied — paste into your Facebook post!');
+  setTimeout(function(){
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
+  }, 800);
 }
 
 function shareTwitter(id, name, city, state, date_missing) {
   var url = getCaseUrl(id);
   var d = new Date(date_missing);
   var dateStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  // Keep under 280 chars
-  var tweet = '🚨 MISSING: ' + name + ', last seen ' + dateStr + ' in ' + city + ', ' + state + '. Call 911 if you have info. ' + url + ' #Missing #StillMissing';
+  var tweet = '\ud83d\udea8 MISSING: ' + name + ', last seen ' + dateStr + ' in ' + city + ', ' + state + '. Call 911 if you have info. ' + url + ' #Missing #StillMissing';
   window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweet), '_blank');
 }
 
@@ -1043,9 +1065,7 @@ function shareSMS(id, name, city, state, date_missing) {
 function copyCaption(id, name, city, state, date_missing) {
   var url = getCaseUrl(id);
   var caption = getCaption(name, city, state, date_missing) + '\n\n' + url;
-  navigator.clipboard.writeText(caption).then(function(){
-    showToast('📋 Caption copied — ready to paste anywhere!');
-  });
+  copyToClipboard(caption, '📋 Caption copied — ready to paste anywhere!');
 }
 
 function showToast(msg) {
@@ -1083,9 +1103,7 @@ function requestRemoval(name) {
 }
 
 function shareCase(id) {
-  navigator.clipboard.writeText(getCaseUrl(id)).then(function(){
-    showToast('🔗 Case link copied to clipboard');
-  });
+  copyToClipboard(getCaseUrl(id), '🔗 Case link copied to clipboard');
 }
 
 // Stats bar
@@ -1141,6 +1159,18 @@ function closeFlyer() {
   document.body.style.overflow = '';
 }
 document.getElementById('flyer-overlay').addEventListener('click', function(e){ if(e.target===this) closeFlyer(); });
+
+function openPhotoLightbox(src) {
+  var lb = document.getElementById('photo-lightbox');
+  document.getElementById('photo-lightbox-img').src = src;
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closePhotoLightbox() {
+  document.getElementById('photo-lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
 
 // Form
 function openForm() {
